@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.P_One">
         <activity
+            android:name=".Crud_2"
+            android:exported="false" />
+        <activity
             android:name=".Crud"
             android:exported="false" />
         <activity
