@@ -21,10 +21,15 @@
         <!-- Fondo ÚNICO de todo el diálogo -->
         <item name="android:windowBackground">@drawable/pone_dialog_card_light</item>
         <item name="android:windowAnimationStyle">@style/POne.DialogAnimation</item>
+        <!--para poner en horizontal-->
+        <!--item name="allowStacking">false</item-->
 
-        <!-- Botones -->
         <item name="buttonBarPositiveButtonStyle">@style/POne.DialogButton.Primary</item>
         <item name="buttonBarNegativeButtonStyle">@style/POne.DialogButton.Negative</item>
+        <item name="buttonBarNeutralButtonStyle">@style/POne.DialogButton.Primary</item>
+
+
+
     </style>
 
     <!-- Títulos / cuerpo (opcional si usas setTitle/setMessage) -->

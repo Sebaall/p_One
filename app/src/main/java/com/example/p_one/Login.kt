@@ -113,6 +113,7 @@ class Login : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Recuperar contraseña")
             .setMessage("¿Quieres usar el correo escrito o ingresar otro?")
+            .setNeutralButton("Cancelar", null)
             .setNegativeButton("Ingresar otro") { _, _ ->
                 pedirCorreoManual()
             }

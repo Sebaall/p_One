@@ -17,8 +17,11 @@
         <item name="android:windowBackground">@drawable/pone_dialog_card_night</item>
         <item name="android:windowAnimationStyle">@style/POne.DialogAnimation</item>
 
-        <item name="buttonBarPositiveButtonStyle">@style/POne.DialogButton.Negative</item>
+        <item name="buttonBarPositiveButtonStyle">@style/POne.DialogButton.Primary</item>
         <item name="buttonBarNegativeButtonStyle">@style/POne.DialogButton.Negative</item>
+        <item name="buttonBarNeutralButtonStyle">@style/POne.DialogButton.Primary</item>
+
+
     </style>
 
     <style name="POne.DialogTitle" parent="TextAppearance.AppCompat.Title">

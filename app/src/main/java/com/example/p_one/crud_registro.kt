@@ -1,5 +1,6 @@
 package com.example.p_one
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -28,6 +29,7 @@ class crud_registro : AppCompatActivity() {
     private lateinit var progress: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_crud_registro)
@@ -49,7 +51,9 @@ class crud_registro : AppCompatActivity() {
 
         btnRegistrar.setOnClickListener { registrar() }
     }
-
+    //bloquea boton de volver
+    override fun onBackPressed() {
+    }
     private fun registrar() {
         val email = txtEmail.text?.toString()?.trim()?.lowercase().orEmpty()
         val usuario = txtUsuario.text?.toString()?.trim().orEmpty()
@@ -222,5 +226,8 @@ class crud_registro : AppCompatActivity() {
             .setMessage(msg)
             .setPositiveButton("OK", null)
             .show()
+    }
+   fun volver(view: View){
+        startActivity(Intent(this, Login::class.java))
     }
 }
