@@ -10,9 +10,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.p_one.Models.Cursos
+import com.example.p_one.Models.Curso
 import com.example.p_one.Models.Alumno
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions // AGREGADO
 
 class Crud : AppCompatActivity() {
 
@@ -21,7 +22,7 @@ class Crud : AppCompatActivity() {
     private lateinit var txt_apellido: EditText
     private lateinit var txt_apodo: EditText
     private lateinit var txt_edad: EditText
-    private val listaCursos = mutableListOf<Cursos>()
+    private val listaCursos = mutableListOf<Curso>()
     private val listaIds = mutableListOf<String>()
     private val listaRegistro = mutableListOf<String>()
     private lateinit var adaptador: ArrayAdapter<String>
@@ -90,6 +91,19 @@ class Crud : AppCompatActivity() {
                                 documentoId = apodo
                                 mostrarAlerta("Éxito", "Alumno $name registrado con apodo '$apodo'.")
                                 limpiarForm()
+
+                                // ===== AGREGADO: Compat con campos *Alumno e int =====
+                                val dataCompat = hashMapOf(
+                                    "nombreAlumno" to name,
+                                    "apellidoAlumno" to apellido,
+                                    "apodoAlumno" to apodo,
+                                    "edadAlumno" to (edad.toIntOrNull() ?: 0),
+                                    "idCurso" to idcurso
+                                )
+                                firebase.collection("Alumnos")
+                                    .document(apodo)
+                                    .set(dataCompat, SetOptions.merge())
+                                // ===== FIN AGREGADO =====
                             }
                             .addOnFailureListener { e ->
                                 mostrarAlerta("Error", e.message ?: "No se pudo registrar.")
@@ -125,16 +139,23 @@ class Crud : AppCompatActivity() {
             listaCursos.clear()
             listaRegistro.clear()
             for (document in result) {
-                val curso = Cursos(
+                val curso = Curso(
                     document.getString("gradoCurso"),
                     document.getString("escuelaCurso"),
                     document.getString("idCurso")
                 )
+
+                // ===== AGREGADO: asegurar idCurso y llenar listaIds =====
+                if (curso.idCurso.isNullOrBlank()) {
+                    curso.idCurso = curso.nivel
+                }
+                listaIds.add(curso.idCurso ?: "")
+                // ===== FIN AGREGADO =====
+
                 listaCursos.add(curso)
-                listaRegistro.add(curso.gradoCurso ?: "")
+                listaRegistro.add(curso.nivel ?: "")
             }
             adaptador.notifyDataSetChanged()
         }
     }
-
 }

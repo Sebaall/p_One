@@ -6,9 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.p_one"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36  // ← esto es Kotlin DSL, no va con bloques
 
     defaultConfig {
         applicationId = "com.example.p_one"
@@ -16,7 +14,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,15 +36,23 @@ android {
 }
 
 dependencies {
+    // AndroidX / UI
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // Firebase - usa tus aliases (KTX) SIN duplicados
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.auth.ktx)
+
+    // BoM para poder usar analytics sin versión explícita
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
+    // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
-    implementation("com.google.firebase:firebase-analytics")
 }
