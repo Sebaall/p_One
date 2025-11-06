@@ -16,7 +16,9 @@
         android:theme="@style/Theme.P_One">
         <activity
             android:name=".crud_registro"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"
+            />
         <activity
             android:name=".Crud_2"
             android:exported="false"

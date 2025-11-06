@@ -1,9 +1,65 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
+
+    <!-- Tema base -->
     <style name="Base.Theme.P_One" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="alertDialogTheme">@style/POne.DialogOverlay</item>
+        <item name="materialAlertDialogTheme">@style/POne.DialogOverlay</item>
+        <item name="editTextStyle">@style/POne.EditText</item>
     </style>
 
+    <!-- Tema usado en AndroidManifest -->
     <style name="Theme.P_One" parent="Base.Theme.P_One" />
+
+    <!-- Animaciones -->
+    <style name="POne.DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
+
+    <!-- Overlay compatible (sin materialAlertDialogBackground) -->
+    <style name="POne.DialogOverlay" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <!-- Fondo ÚNICO de todo el diálogo -->
+        <item name="android:windowBackground">@drawable/pone_dialog_card_light</item>
+        <item name="android:windowAnimationStyle">@style/POne.DialogAnimation</item>
+
+        <!-- Botones -->
+        <item name="buttonBarPositiveButtonStyle">@style/POne.DialogButton.Primary</item>
+        <item name="buttonBarNegativeButtonStyle">@style/POne.DialogButton.Negative</item>
+    </style>
+
+    <!-- Títulos / cuerpo (opcional si usas setTitle/setMessage) -->
+    <style name="POne.DialogTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">#CC7A00</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="POne.DialogBody" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">#333333</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- Botones AppCompat (seguros con AlertDialog.Builder) -->
+    <style name="POne.DialogButton.Primary" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#CC7A00</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="POne.DialogButton.Negative" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#CC7A00</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- EditText del modal -->
+    <style name="POne.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/pone_edittext_bg</item>
+        <item name="android:textColor">#111111</item>
+        <item name="android:textColorHint">#9E9E9E</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style>
+
+    <!-- Alias por si algún XML apunta a @style/POne -->
+    <style name="POne" parent="@style/Theme.P_One" />
+
 </resources>

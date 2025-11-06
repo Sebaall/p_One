@@ -6,12 +6,15 @@ import android.os.Handler
 import android.os.Looper
 import android.text.InputType
 import android.util.Patterns
+import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -49,8 +52,12 @@ class Login : AppCompatActivity() {
         tvOlvidaste = findViewById(R.id.tv_olvidaste)
         tvRegistrar= findViewById(R.id.tv_registrate)
 
-        btnLogin.setOnClickListener { validador() }
-        tvOlvidaste.setOnClickListener { mostrarModalReset() }
+        btnLogin.setOnClickListener {
+            validador()
+        }
+        tvOlvidaste.setOnClickListener {
+            mostrarModalReset()
+        }
         tvRegistrar.setOnClickListener {
             startActivity(Intent(this, crud_registro::class.java))
         }
@@ -94,8 +101,8 @@ class Login : AppCompatActivity() {
                     }
                 } else {
                     val msg = task.exception?.localizedMessage ?: "Correo o contraseña incorrectos."
-                    mostrarAlerta("Error", msg)
-                    btnLogin.isEnabled = true  // re-habilita en fallo
+                    mostrarAlerta("Error", "Correo o contraseña incorrectos")
+                    btnLogin.isEnabled = true
                 }
             }
 
@@ -106,38 +113,59 @@ class Login : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Recuperar contraseña")
             .setMessage("¿Quieres usar el correo escrito o ingresar otro?")
-            .setNegativeButton("Ingresar otro") { _, _ -> pedirCorreoManual() }
+            .setNegativeButton("Ingresar otro") { _, _ ->
+                pedirCorreoManual()
+            }
             .setPositiveButton("Usar este") { _, _ ->
                 if (!Patterns.EMAIL_ADDRESS.matcher(correoActual).matches()) {
                     mostrarAlerta("Correo inválido", "Escribe un correo válido en el campo o ingresa otro.")
                 } else {
                     solicitarResetConAuth(correoActual)
                 }
+                limpiar()
             }
             .show()
     }
 
     private fun pedirCorreoManual() {
         val input = EditText(this).apply {
+            //Design
             hint = "Correo"
+            textSize = 18f
+            setPadding(40, 30, 40, 30)
+            background = ContextCompat.getDrawable(context, R.drawable.pone_edittext_bg)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             setSingleLine(true)
         }
 
+        val contenedor = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(20, 10, 20, 10)
+
+            val anchoPx = (310 * resources.displayMetrics.density).toInt()
+            addView(input, LinearLayout.LayoutParams(anchoPx, LinearLayout.LayoutParams.WRAP_CONTENT))
+        }
+
+
+        //Database Recuperacion clave
         AlertDialog.Builder(this)
             .setTitle("Recuperar contraseña")
-            .setView(input)
+            .setView(contenedor)
             .setNegativeButton("Cancelar", null)
             .setPositiveButton("Enviar") { _, _ ->
                 val correo = input.text.toString().trim()
                 if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-                    mostrarAlerta("Correo inválido", "Ingresa un correo válido.")
+                    mostrarAlerta("Error", "Ingresa un correo válido.")
                 } else {
                     solicitarResetConAuth(correo)
+                    limpiar()
+
                 }
             }
             .show()
     }
+
 
     private fun solicitarResetConAuth(correo: String) {
         val email = correo.trim()
@@ -147,31 +175,36 @@ class Login : AppCompatActivity() {
         }
 
         firebase.collection("users")
+            //verifica el correo coincida
             .whereEqualTo("correo", email)
+            //trae solo uno
             .limit(1)
             .get()
-            .addOnSuccessListener { snap ->
-                val puedeEnviar = if (snap.isEmpty) {
+            .addOnSuccessListener { id ->
+                //si el usuario no existe
+                val puedeEnviar = if (id.isEmpty) {
                     true
                 } else {
-                    val doc = snap.documents.first()
+                    //si existe revisa el tiempo de la ultima recuperacion de clave
+                    val doc = id.documents.first()
+                    //busca la ultima vez que se solicito recuperacion
                     val last = doc.getTimestamp("lastRecovery")?.toDate()
+                    //if no tiene deja enviar, en caso contrario son 60 segundos
                     if (last == null) true else (System.currentTimeMillis() - last.time) > 60_000
                 }
-
                 if (!puedeEnviar) {
                     mostrarAlerta("Espera un momento", "Intenta nuevamente en unos segundos.")
                 } else {
                     auth.sendPasswordResetEmail(email)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                if (!snap.isEmpty) {
-                                    val id = snap.documents.first().id
+                                if (!id.isEmpty) {
+                                    val id = id.documents.first().id
                                     firebase.collection("users")
                                         .document(id)
                                         .update("lastRecovery", Timestamp.now())
                                 }
-                                mostrarAlerta("Listo", "Te envié un correo para restablecer tu contraseña.")
+                                mostrarAlerta("Exito", "Se te ha enviado un correo para recuperar tu contraseña.")
                             } else {
                                 val msg = task.exception?.localizedMessage
                                     ?: "No se pudo enviar el correo de recuperación."
@@ -182,11 +215,11 @@ class Login : AppCompatActivity() {
             }
             .addOnFailureListener {
                 auth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
+                    .addOnCompleteListener { emails ->
+                        if (emails.isSuccessful) {
                             mostrarAlerta("Listo", "Te envié un correo para restablecer tu contraseña.")
                         } else {
-                            val msg = task.exception?.localizedMessage
+                            val msg = emails.exception?.localizedMessage
                                 ?: "No se pudo enviar el correo de recuperación."
                             mostrarAlerta("Error", msg)
                         }
@@ -204,6 +237,10 @@ class Login : AppCompatActivity() {
         }
 
         builder.show()
+    }
+    private fun limpiar(){
+        txtcontrasena.text.clear()
+        txtcorreo.text.clear()
     }
 
 }
