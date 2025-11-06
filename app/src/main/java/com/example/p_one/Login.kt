@@ -27,6 +27,7 @@ class Login : AppCompatActivity() {
     private lateinit var txtcontrasena: EditText
     private lateinit var btnLogin: Button
     private lateinit var tvOlvidaste: TextView
+    private lateinit var tvRegistrar: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +47,13 @@ class Login : AppCompatActivity() {
         txtcontrasena = findViewById(R.id.txt_contrasena)
         btnLogin = findViewById(R.id.btn_login)
         tvOlvidaste = findViewById(R.id.tv_olvidaste)
+        tvRegistrar= findViewById(R.id.tv_registrate)
 
         btnLogin.setOnClickListener { validador() }
         tvOlvidaste.setOnClickListener { mostrarModalReset() }
+        tvRegistrar.setOnClickListener {
+            startActivity(Intent(this, crud_registro::class.java))
+        }
     }
 
     private fun validador() {
@@ -75,11 +80,18 @@ class Login : AppCompatActivity() {
         auth.signInWithEmailAndPassword(correo, pass)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    mostrarAlerta("Inicio exitoso", "Usuario correcto.")
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        startActivity(Intent(this, Crud::class.java))
-                        finish()
-                    }, 2000) // 2s
+                    val user = auth.currentUser
+                    if (user != null && user.isEmailVerified) {
+                        mostrarAlerta("Inicio exitoso", "Usuario correcto.")
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            startActivity(Intent(this, Crud::class.java))
+                            finish()
+                        }, 2000) // 2s
+                    } else {
+                        mostrarAlerta("Verifica tu cuenta", "Debes confirmar tu correo antes de ingresar.")
+                        auth.signOut()
+                        btnLogin.isEnabled = true
+                    }
                 } else {
                     val msg = task.exception?.localizedMessage ?: "Correo o contraseña incorrectos."
                     mostrarAlerta("Error", msg)
