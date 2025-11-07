@@ -2,46 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".crud_registro"
+    tools:context=".crudAdmin.crudAlumno"
     android:background="@drawable/backgroundventanas">
 
     <LinearLayout
         android:id="@+id/main_container"
         android:layout_width="384dp"
-        android:layout_height="402dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.407"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.55">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:boxBackgroundColor="#FFFFFF"
-            app:boxBackgroundMode="outline"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxStrokeColor="#000000"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:hintTextColor="#000000">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Correo"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Nombre -->
         <com.google.android.material.textfield.TextInputLayout
@@ -59,12 +35,13 @@
             app:hintTextColor="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtNombre"
+                android:id="@+id/txt_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Apellido -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -81,13 +58,99 @@
             app:hintTextColor="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_Apellido"
+                android:id="@+id/txt_apellido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Apellido"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Apodo -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="2dp"
+            app:hintTextColor="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_apodo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Apodo"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Curso -->
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Curso"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:textColor="#000000" />
+
+        <Spinner
+            android:id="@+id/spinner_curso"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Edad -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="2dp"
+            app:hintTextColor="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_edad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Edad"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Correo -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#000000"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="2dp"
+            app:hintTextColor="#000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_correo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Correo"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Contraseña -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -104,13 +167,14 @@
             app:hintTextColor="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtPassword"
+                android:id="@+id/txt_contrasena"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Botones -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -120,38 +184,33 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnVolver"
+                android:id="@+id/button"
                 android:layout_width="130dp"
                 android:layout_height="53dp"
                 android:layout_marginEnd="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:onClick="volver"
-                android:text="Volver"
+                android:text="Crear alumno"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:onClick="crearAlumno"
                 app:backgroundTint="#FFA726"
-                app:cornerRadius="12dp"
-                app:rippleColor="#CC7A00" />
+                app:rippleColor="#CC7A00"
+                app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRegistrar"
+                android:id="@+id/btnVerLista"
                 android:layout_width="130dp"
                 android:layout_height="53dp"
                 android:layout_marginStart="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="Crear cuenta"
+                android:text="Ver lista alumnos"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
                 app:backgroundTint="#FFA726"
-                app:cornerRadius="12dp"
-                app:rippleColor="#CC7A00" />
+                app:rippleColor="#CC7A00"
+                app:cornerRadius="12dp" />
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone" />
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

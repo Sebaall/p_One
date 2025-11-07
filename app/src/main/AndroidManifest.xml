@@ -15,6 +15,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.P_One">
         <activity
+            android:name=".crudAdmin.crudCursos"
+            android:exported="false" />
+
+        <activity
+            android:name=".crudAdmin.crudAdministrador"
+            android:exported="false" />
+        <activity
+            android:name=".crudAdmin.crudProfesor"
+            android:exported="false" />
+        <activity
+            android:name=".crudAdmin.crudRoles"
+            android:exported="false" />
+        <activity
+            android:name=".menuProfesor"
+            android:exported="false" />
+        <activity
+            android:name=".menuAlumno"
+            android:exported="false" />
+        <activity
             android:name=".menuAdmin"
             android:exported="false" />
         <activity
@@ -22,7 +41,7 @@
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".Crud"
+            android:name=".crudAdmin.crudAlumno"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity

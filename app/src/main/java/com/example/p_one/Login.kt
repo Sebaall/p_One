@@ -1,5 +1,4 @@
 package com.example.p_one
-
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.crudAdmin.crudAlumno
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.Timestamp
@@ -89,11 +89,52 @@ class Login : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     if (user != null && user.isEmailVerified) {
-                        mostrarAlerta("Inicio exitoso", "Usuario correcto.")
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            startActivity(Intent(this, Crud::class.java))
-                            finish()
-                        }, 2000) // 2s
+                        FirebaseFirestore.getInstance()
+                            .collection("users")
+                            .document(user.uid)
+                            .get()
+                            .addOnSuccessListener { snap ->
+                                val data = snap.data
+
+                                val nombre = data?.get("nombre")?.toString()?.trim().orEmpty()
+                                val apellido = data?.get("apellido")?.toString()?.trim().orEmpty()
+                                val nombreUsuario = data?.get("nombreusuario")?.toString()?.trim().orEmpty()
+
+                                val displayName = when {
+                                    nombre.isNotBlank() || apellido.isNotBlank() ->
+                                        listOf(nombre, apellido).filter { it.isNotBlank() }.joinToString(" ")
+                                    nombreUsuario.isNotBlank() -> nombreUsuario
+                                    else -> user.email?.substringBefore('@') ?: "Usuario"
+                                }
+
+                                val rolesList = (data?.get("roles") as? List<*>)?.map { it.toString() } ?: emptyList()
+                                val rolLegible = when {
+                                    rolesList.contains("MENU_ADMIN") -> "Administrador"
+                                    rolesList.contains("MENU_PROFESOR") -> "Profesor"
+                                    else -> "Alumno"
+                                }
+
+                                mostrarAlerta("Inicio exitoso", "Bienvenido $rolLegible $displayName")
+
+                                val esAdmin = rolesList.contains("MENU_ADMIN")
+                                val esProfe = rolesList.contains("MENU_PROFESOR")
+
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    when {
+                                        esAdmin -> startActivity(Intent(this, menuAdmin::class.java))
+                                        esProfe -> startActivity(Intent(this, menuProfesor::class.java))
+                                        else -> startActivity(Intent(this, menuAlumno::class.java))
+                                    }
+                                    finish()
+                                }, 1200)
+                            }
+                            .addOnFailureListener {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    startActivity(Intent(this, crudAlumno::class.java))
+                                    finish()
+                                }, 1200)
+                            }
+
                     } else {
                         mostrarAlerta("Verifica tu cuenta", "Debes confirmar tu correo antes de ingresar.")
                         auth.signOut()

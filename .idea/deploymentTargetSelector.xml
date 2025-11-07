@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-05T14:55:36.618445Z">
+        <DropdownSelection timestamp="2025-11-07T14:27:03.039091Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=pfkvd6tct8tsxgoz" />
@@ -14,6 +14,9 @@
         <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="Crud">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="crudRoles">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

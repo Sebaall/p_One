@@ -23,13 +23,13 @@ class crud_registro : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
 
     private lateinit var txtEmail: TextInputEditText
-    private lateinit var txtUsuario: TextInputEditText
+    private lateinit var txtNombre: TextInputEditText
+    private lateinit var txtApellido: TextInputEditText
     private lateinit var txtPassword: TextInputEditText
     private lateinit var btnRegistrar: Button
     private lateinit var progress: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_crud_registro)
@@ -44,40 +44,42 @@ class crud_registro : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
 
         txtEmail = findViewById(R.id.txtEmail)
-        txtUsuario = findViewById(R.id.txtNombre)
+        txtNombre = findViewById(R.id.txtNombre)
+        txtApellido = findViewById(R.id.txt_Apellido)
         txtPassword = findViewById(R.id.txtPassword)
         btnRegistrar = findViewById(R.id.btnRegistrar)
         progress = findViewById(R.id.progress)
 
         btnRegistrar.setOnClickListener { registrar() }
     }
-    //bloquea boton de volver
-    override fun onBackPressed() {
-    }
+
+    override fun onBackPressed() { }
+
     private fun registrar() {
         val email = txtEmail.text?.toString()?.trim()?.lowercase().orEmpty()
-        val usuario = txtUsuario.text?.toString()?.trim().orEmpty()
+        val nombre = txtNombre.text?.toString()?.trim().orEmpty()
+        val apellido = txtApellido.text?.toString()?.trim().orEmpty()
         val pass = txtPassword.text?.toString().orEmpty()
 
         when {
             email.isEmpty() -> { alerta("Ingresa tu correo"); return }
             !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> { alerta("Correo no válido"); return }
-            usuario.isEmpty() -> { alerta("Ingresa tu nombre de usuario"); return }
+            nombre.isEmpty() -> { alerta("Ingresa tu nombre"); return }
+            apellido.isEmpty() -> { alerta("Ingresa tu apellido"); return }
             pass.isEmpty() -> { alerta("Ingresa tu contraseña"); return }
             pass.length < 6 -> { alerta("La contraseña debe tener al menos 6 caracteres"); return }
         }
 
         bloquear(true)
-
-        limpiarStalePorUsuario(usuario) {
+        limpiarStalePorUsuario(nombre) {
             limpiarStalePorCorreo(email) {
-                crearCuenta(email, usuario, pass)
+                crearCuenta(email, nombre, apellido, pass)
             }
         }
     }
 
-    private fun crearCuenta(email: String, usuario: String, pass: String) {
-        db.collection("users").whereEqualTo("nombreusuario", usuario).limit(1).get()
+    private fun crearCuenta(email: String, nombre: String, apellido: String, pass: String) {
+        db.collection("users").whereEqualTo("nombre", nombre).limit(1).get()
             .addOnSuccessListener { snapUser ->
                 if (snapUser.isEmpty) {
                     db.collection("users").whereEqualTo("correo", email).limit(1).get()
@@ -90,8 +92,9 @@ class crud_registro : AppCompatActivity() {
                                             val perfil = Users(
                                                 idUsuario = u.uid,
                                                 correo = email,
-                                                nombreusuario = usuario,
-                                                rol = null,
+                                                nombre = nombre,
+                                                apellido = apellido,
+                                                roles = null,
                                                 idPerfil = null,
                                                 activo = false,
                                                 emailVerificado = false,
@@ -100,6 +103,7 @@ class crud_registro : AppCompatActivity() {
 
                                             db.collection("users").document(u.uid).set(perfil)
                                                 .addOnSuccessListener {
+                                                    asignarRolPorDefecto(u)
                                                     enviarCorreoVerificacion(u) { ok, info ->
                                                         if (ok) {
                                                             db.collection("users").document(u.uid)
@@ -143,12 +147,12 @@ class crud_registro : AppCompatActivity() {
                         }
                 } else {
                     bloquear(false)
-                    alerta("Ese nombre de usuario ya está en uso.")
+                    alerta("Ese nombre ya está en uso.")
                 }
             }
             .addOnFailureListener { e ->
                 bloquear(false)
-                alerta(e.message ?: "Error al validar nombre de usuario.")
+                alerta(e.message ?: "Error al validar nombre.")
             }
     }
 
@@ -156,60 +160,20 @@ class crud_registro : AppCompatActivity() {
         auth.setLanguageCode("es")
         user.sendEmailVerification()
             .addOnCompleteListener { t ->
-                if (t.isSuccessful) {
-                    cb(true, null)
-                } else {
-                    val again = FirebaseAuth.getInstance().currentUser
-                    if (again != null) {
-                        again.sendEmailVerification()
-                            .addOnCompleteListener { tt ->
-                                if (tt.isSuccessful) cb(true, null)
-                                else cb(false, tt.exception?.localizedMessage ?: "Fallo al enviar verificación")
-                            }
-                    } else {
-                        cb(false, t.exception?.localizedMessage ?: "Usuario no disponible para verificación")
-                    }
-                }
+                if (t.isSuccessful) cb(true, null)
+                else cb(false, t.exception?.localizedMessage ?: "Fallo al enviar verificación")
             }
     }
 
-    private fun limpiarStalePorUsuario(usuario: String, continuar: () -> Unit) {
-        db.collection("users").whereEqualTo("nombreusuario", usuario).limit(1).get()
-            .addOnSuccessListener { snap ->
-                if (snap.isEmpty) {
-                    continuar()
-                } else {
-                    val doc = snap.documents.first()
-                    val idU = doc.getString("idUsuario").orEmpty()
-                    if (idU.isBlank()) {
-                        doc.reference.delete()
-                            .addOnSuccessListener { continuar() }
-                            .addOnFailureListener { continuar() }
-                    } else {
-                        continuar()
-                    }
-                }
-            }
+    private fun limpiarStalePorUsuario(nombre: String, continuar: () -> Unit) {
+        db.collection("users").whereEqualTo("nombre", nombre).limit(1).get()
+            .addOnSuccessListener { continuar() }
             .addOnFailureListener { continuar() }
     }
 
     private fun limpiarStalePorCorreo(email: String, continuar: () -> Unit) {
         db.collection("users").whereEqualTo("correo", email).limit(1).get()
-            .addOnSuccessListener { snap ->
-                if (snap.isEmpty) {
-                    continuar()
-                } else {
-                    val doc = snap.documents.first()
-                    val idU = doc.getString("idUsuario").orEmpty()
-                    if (idU.isBlank()) {
-                        doc.reference.delete()
-                            .addOnSuccessListener { continuar() }
-                            .addOnFailureListener { continuar() }
-                    } else {
-                        continuar()
-                    }
-                }
-            }
+            .addOnSuccessListener { continuar() }
             .addOnFailureListener { continuar() }
     }
 
@@ -217,7 +181,8 @@ class crud_registro : AppCompatActivity() {
         progress.visibility = if (b) View.VISIBLE else View.GONE
         btnRegistrar.isEnabled = !b
         txtEmail.isEnabled = !b
-        txtUsuario.isEnabled = !b
+        txtNombre.isEnabled = !b
+        txtApellido.isEnabled = !b
         txtPassword.isEnabled = !b
     }
 
@@ -227,7 +192,21 @@ class crud_registro : AppCompatActivity() {
             .setPositiveButton("OK", null)
             .show()
     }
-   fun volver(view: View){
+
+    fun volver(view: View) {
         startActivity(Intent(this, Login::class.java))
+    }
+
+    private fun asignarRolPorDefecto(user: FirebaseUser) {
+        val correoSan = user.email.orEmpty().replace(Char(64).toString(), "(at)")
+        val dataUser = hashMapOf(
+            "correoSan" to correoSan,
+            "roles" to listOf("MENU_ALUMNOS"),
+            "nivelAcceso" to 1,
+            "updatedAt" to com.google.firebase.Timestamp.now()
+        )
+        db.collection("users")
+            .document(user.uid)
+            .set(dataUser, com.google.firebase.firestore.SetOptions.merge())
     }
 }

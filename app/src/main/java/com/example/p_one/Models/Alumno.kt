@@ -6,5 +6,6 @@ data class Alumno(
     var apellidoAlumno: String? = null,
     var apodoAlumno: String? = null,
     var edadAlumno: Int? = null,
-    var idCurso: String? = null
+    var idCurso: String? = null,
+    var correoAlumno: String? = null
 )
