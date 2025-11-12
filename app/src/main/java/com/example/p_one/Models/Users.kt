@@ -1,24 +1,34 @@
 package com.example.p_one.Models
 
-import com.google.firebase.Timestamp
-
 data class Users(
-    var idUsuario: String? = null,
-    var correo: String? = null,
+    var uidAuth: String? = null,         // ID de Firebase Auth
+    var rol: String? = null,             // Alumno / Profesor / Administrador
+    var activo: Boolean = true,
+
+    // Datos comunes
     var nombre: String? = null,
     var apellido: String? = null,
+    var correo: String? = null,
 
-    // 🔹 Ahora roles es una lista (puede haber más de un rol)
+    // Datos de alumno
+    var idAlumno: String? = null,
+    var apodoAlumno: String? = null,
+    var edadAlumno: Int? = null,
+    var idCurso: String? = null,         // curso del alumno
+
+    // Datos de profesor
+    var idProfesor: String? = null,
+    var cursosAsignados: List<String>? = null,
+
+    // Datos de administrador
+    var idAdmin: String? = null,
+
+    // Roles extra si mantienes tu colección de roles
     var roles: List<String>? = null,
-
-    // 🔹 nivelAcceso (1 alumno, 2 profesor, 3 admin)
     var nivelAcceso: Int? = 1,
 
-    var idPerfil: String? = null,
-    var activo: Boolean = true,
+    // Auditoría
     var emailVerificado: Boolean = false,
-
-    // 🔹 Fecha exacta tipo Timestamp para Firestore
     var createdAt: Long? = System.currentTimeMillis(),
-    var updatedAt: Timestamp? = null
+    var updatedAt: Long? = null
 )
