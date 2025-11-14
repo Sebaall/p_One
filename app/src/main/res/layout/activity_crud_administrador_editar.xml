@@ -53,6 +53,19 @@
             android:background="#FFE0B2"
             android:layout_marginBottom="16dp" />
 
+        <!-- 📧 CORREO (SOLO LECTURA COMO ALUMNO) -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvCorreoAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Correo:"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:padding="10dp"
+            android:background="#FFF3E0"
+            android:layout_marginBottom="14dp"
+            android:gravity="center_vertical" />
+
         <!-- Nombre -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -101,31 +114,7 @@
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Correo -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            app:boxBackgroundColor="#FFFFFF"
-            app:boxBackgroundMode="outline"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxStrokeColor="#000000"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:hintTextColor="#000000">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_correo_admin"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Correo"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Contraseña (opcional para mostrar/guardar localmente) -->
+        <!-- Contraseña -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -150,7 +139,7 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Texto de ayuda -->
+        <!-- Texto ayuda -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvAyudaCrudAdmin"
             android:layout_width="match_parent"
@@ -161,7 +150,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="10dp" />
 
-        <!-- Botones (Cancelar / Editar admin) -->
+        <!-- Botones -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -175,11 +164,11 @@
                 android:layout_width="130dp"
                 android:layout_height="53dp"
                 android:layout_marginEnd="10dp"
+                android:onClick="cancelarEdicion"
                 android:text="Cancelar"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-medium"
-                android:onClick="cancelarEdicion"
                 app:backgroundTint="#B0BEC5"
                 app:rippleColor="#78909C"
                 app:cornerRadius="12dp" />
@@ -189,11 +178,11 @@
                 android:layout_width="130dp"
                 android:layout_height="53dp"
                 android:layout_marginStart="10dp"
+                android:onClick="editarAdministrador"
                 android:text="Editar admin"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-medium"
-                android:onClick="editarAdministrador"
                 app:backgroundTint="#FFA726"
                 app:rippleColor="#CC7A00"
                 app:cornerRadius="12dp" />

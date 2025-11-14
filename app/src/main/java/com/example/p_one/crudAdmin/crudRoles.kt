@@ -1,5 +1,6 @@
 package com.example.p_one.crudAdmin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.EditCrud.listcrudCurso
+import com.example.p_one.EditCrud.listcrudRoles
 import com.example.p_one.Models.Rol
 import com.example.p_one.R
 import com.google.firebase.auth.FirebaseAuth
@@ -29,6 +32,7 @@ class crudRoles : AppCompatActivity() {
     private lateinit var progressRol: ProgressBar
 
     private var uidCreador: String = ""
+    private var nombreCreador: String = ""   // <-- nombre del admin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +62,7 @@ class crudRoles : AppCompatActivity() {
         val uid = auth.currentUser?.uid
         if (uid == null) {
             uidCreador = ""
+            nombreCreador = ""
             tvCreadorNombre.text = "No identificado"
             return
         }
@@ -80,11 +85,13 @@ class crudRoles : AppCompatActivity() {
                     else -> uid
                 }
 
-                tvCreadorNombre.text = display.ifEmpty { uid }
+                nombreCreador = display.ifEmpty { uid }
+                tvCreadorNombre.text = nombreCreador
                 progressRol.visibility = View.GONE
             }
             .addOnFailureListener {
                 tvCreadorNombre.text = "Desconocido"
+                nombreCreador = ""
                 progressRol.visibility = View.GONE
             }
     }
@@ -153,7 +160,7 @@ class crudRoles : AppCompatActivity() {
             nivelAcceso = nivelAcceso,
             permisos = permisos,
             fechaCreacion = fecha,
-            creadoPor = uidCreador
+            creadoPor = nombreCreador   // <-- aquí va el nombre del admin
         )
 
         progressRol.visibility = View.VISIBLE
@@ -184,6 +191,10 @@ class crudRoles : AppCompatActivity() {
                 progressRol.visibility = View.GONE
                 mostrarAlerta("Error", e.message ?: "Error al verificar duplicados.")
             }
+    }
+
+    fun curdlistroles(view: View){
+        startActivity(Intent(this, listcrudRoles::class.java))
     }
 
     private fun limpiarForm() {

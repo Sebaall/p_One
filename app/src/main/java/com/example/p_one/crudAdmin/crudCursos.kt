@@ -1,5 +1,6 @@
 package com.example.p_one.crudAdmin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -9,6 +10,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.EditCrud.listcrudAlumno
+import com.example.p_one.EditCrud.listcrudCurso
+import com.example.p_one.EditCrud.listcrudProfesor
 import com.example.p_one.Models.Curso
 import com.example.p_one.R
 import com.google.android.material.textfield.TextInputEditText
@@ -53,6 +57,10 @@ class crudCursos : AppCompatActivity() {
         cargarProfes()
     }
 
+    fun listcurso(view: View) {
+        startActivity(Intent(this, listcrudCurso::class.java))
+    }
+
     private fun cargarProfes() {
         firebase.collection("users")
             .whereEqualTo("rol", "Profesor")
@@ -85,13 +93,14 @@ class crudCursos : AppCompatActivity() {
             return
         }
 
-        if (listaProfesIds.isEmpty()) {
-            mostrarAlerta("Error", "No hay profesores registrados.")
-            return
+        // profesorId OPCIONAL
+        val profesorId: String? = if (listaProfesIds.isNotEmpty()
+            && spProfes.selectedItemPosition in listaProfesIds.indices
+        ) {
+            listaProfesIds[spProfes.selectedItemPosition]
+        } else {
+            null
         }
-
-        val pos = spProfes.selectedItemPosition
-        val profesorId = listaProfesIds[pos]
 
         val cursosRef = firebase.collection("Cursos")
         val nuevoDoc = cursosRef.document()
@@ -106,7 +115,12 @@ class crudCursos : AppCompatActivity() {
 
         nuevoDoc.set(curso)
             .addOnSuccessListener {
-                mostrarAlerta("Éxito", "Curso '$nombre' creado con profesor asignado.")
+                val msg = if (profesorId == null) {
+                    "Curso '$nombre' creado SIN profesor asignado."
+                } else {
+                    "Curso '$nombre' creado con profesor asignado."
+                }
+                mostrarAlerta("Éxito", msg)
                 limpiarFormCurso()
             }
             .addOnFailureListener { e ->

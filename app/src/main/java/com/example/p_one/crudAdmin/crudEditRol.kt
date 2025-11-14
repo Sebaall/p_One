@@ -35,6 +35,10 @@ class crudEditRol : AppCompatActivity() {
     // rol actual del usuario seleccionado (para reflejarlo en el spinner)
     private var rolActualUsuario: String? = null
 
+    // ⚠️ ADMIN QUE NO SE PUEDE EDITAR ROL
+    private val adminProtegidoUid = "9o51Mc4SWvZIV02pZOpSACFxJSZ2"
+    private val adminProtegidoCorreo = "sebastian.leon1@virginiogomez.cl"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -264,6 +268,13 @@ class crudEditRol : AppCompatActivity() {
         }
 
         val uidUser = listaUserIds[idxUser]
+
+        // ⚠️ BLOQUEO DEL ADMIN PROTEGIDO
+        val correoTexto = tvCorreoUsuario.text.toString()
+        if (uidUser == adminProtegidoUid || correoTexto.contains(adminProtegidoCorreo)) {
+            mostrarAlerta("Acceso denegado", "No se le puede cambiar el rol a este administrador.")
+            return
+        }
 
         val idxRol = spinnerNuevoRol.selectedItemPosition
         if (idxRol < 0 || idxRol >= listaRolesNombres.size) {

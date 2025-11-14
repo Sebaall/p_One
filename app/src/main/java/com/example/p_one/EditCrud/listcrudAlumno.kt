@@ -13,6 +13,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.p_one.Models.Users
 import com.example.p_one.R
 import com.google.firebase.firestore.FirebaseFirestore
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class listcrudAlumno : AppCompatActivity() {
 
@@ -21,6 +26,12 @@ class listcrudAlumno : AppCompatActivity() {
 
     private val listaAlumnos = mutableListOf<Users>()
     private lateinit var adapterAlumnos: ArrayAdapter<String>
+
+    private val client = OkHttpClient()
+    private val BASE_URL = "https://pone-backend-kz8c.onrender.com"
+
+    private val URL_ELIMINAR_USUARIO =
+        "$BASE_URL/eliminarUsuarioCompleto"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,18 +144,49 @@ class listcrudAlumno : AppCompatActivity() {
     private fun eliminarAlumno(alumno: Users, position: Int) {
         val id = alumno.uidAuth ?: return
 
-        db.collection("users")
-            .document(id)
-            .delete()
-            .addOnSuccessListener {
-                mostrarAlerta("Éxito", "Alumno eliminado.")
-                listaAlumnos.removeAt(position)
-                adapterAlumnos.remove(adapterAlumnos.getItem(position))
-                adapterAlumnos.notifyDataSetChanged()
+        eliminarUsuarioCompletoBackend(id) { ok, mensaje ->
+            runOnUiThread {
+                if (ok) {
+                    val textoItem = adapterAlumnos.getItem(position)
+                    if (textoItem != null) {
+                        adapterAlumnos.remove(textoItem)
+                    }
+                    listaAlumnos.removeAt(position)
+                    adapterAlumnos.notifyDataSetChanged()
+
+                    mostrarAlerta("Éxito", "Alumno eliminado correctamente.")
+                } else {
+                    mostrarAlerta("Error", "Error al eliminar: $mensaje")
+                }
             }
-            .addOnFailureListener { e ->
-                mostrarAlerta("Error", "Error al eliminar: ${e.message}")
+        }
+    }
+
+    private fun eliminarUsuarioCompletoBackend(
+        idDocumento: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        val json = JSONObject().apply {
+            put("idUsuario", idDocumento)
+        }
+
+        val body = json.toString()
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val request = Request.Builder()
+            .url(URL_ELIMINAR_USUARIO)
+            .post(body)
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                val result = response.body?.string() ?: ""
+                callback(response.isSuccessful, result)
+            } catch (e: Exception) {
+                callback(false, e.message ?: "Error desconocido")
             }
+        }.start()
     }
 
     private fun mostrarAlerta(titulo: String, mensaje: String) {

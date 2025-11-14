@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation("com.google.android.material:material:1.12.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // Firebase - usa tus aliases (KTX) SIN duplicados
     implementation(libs.firebase.firestore.ktx)

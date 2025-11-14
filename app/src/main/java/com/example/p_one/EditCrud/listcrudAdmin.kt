@@ -14,6 +14,11 @@ import com.example.p_one.Models.Users
 import com.example.p_one.R
 import com.example.p_one.crudAdmin.crudAdministradorEditar
 import com.google.firebase.firestore.FirebaseFirestore
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class listcrudAdmin : AppCompatActivity() {
 
@@ -22,6 +27,18 @@ class listcrudAdmin : AppCompatActivity() {
 
     private val listaAdmins = mutableListOf<Users>()
     private lateinit var adapterAdmins: ArrayAdapter<String>
+
+    // ⚠️ ADMIN QUE NO SE PUEDE ELIMINAR
+    private val adminProtegidoUid = "9o51Mc4SWvZIV02pZOpSACFxJSZ2"
+    private val adminProtegidoCorreo = "sebastian.leon1@virginiogomez.cl"
+
+    // ---------------- BACKEND NODE ----------------
+    private val client = OkHttpClient()
+    private val BASE_URL = "https://pone-backend-kz8c.onrender.com"
+
+    private val URL_ELIMINAR_USUARIO =
+        "$BASE_URL/eliminarUsuarioCompleto"
+    // ------------------------------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +126,22 @@ class listcrudAdmin : AppCompatActivity() {
         startActivity(intent)
     }
 
+    // ⚠️ CHEQUEA SI ES EL ADMIN BLOQUEADO
+    private fun esAdminProtegido(admin: Users): Boolean {
+        val uid = admin.uidAuth ?: ""
+        val correo = admin.correo ?: ""
+
+        return uid == adminProtegidoUid || correo == adminProtegidoCorreo
+    }
+
     private fun confirmarEliminarAdmin(admin: Users, position: Int) {
+
+        // 🚫 Bloquear eliminación del admin especial
+        if (esAdminProtegido(admin)) {
+            mostrarAlerta("Aviso", "No puedes eliminar este administrador.")
+            return
+        }
+
         AlertDialog.Builder(this)
             .setTitle("Eliminar administrador")
             .setMessage("¿Seguro que deseas eliminar a ${admin.nombre} ${admin.apellido}?")
@@ -123,20 +155,51 @@ class listcrudAdmin : AppCompatActivity() {
     private fun eliminarAdmin(admin: Users, position: Int) {
         val id = admin.uidAuth ?: return
 
-        db.collection("users")
-            .document(id)
-            .delete()
-            .addOnSuccessListener {
-                mostrarAlerta("Éxito", "Administrador eliminado.")
+        eliminarUsuarioCompletoBackend(id) { ok, mensaje ->
+            runOnUiThread {
+                if (ok) {
+                    val textoItem = adapterAdmins.getItem(position)
+                    if (textoItem != null) adapterAdmins.remove(textoItem)
 
-                listaAdmins.removeAt(position)
-                adapterAdmins.remove(adapterAdmins.getItem(position))
-                adapterAdmins.notifyDataSetChanged()
+                    listaAdmins.removeAt(position)
+                    adapterAdmins.notifyDataSetChanged()
+
+                    mostrarAlerta("Éxito", "Administrador eliminado correctamente.")
+                } else {
+                    mostrarAlerta("Error", "Error al eliminar: $mensaje")
+                }
             }
-            .addOnFailureListener { e ->
-                mostrarAlerta("Error", "Error al eliminar: ${e.message}")
-            }
+        }
     }
+
+    // -------------- FUNCIÓN PARA LLAMAR AL BACKEND --------------
+    private fun eliminarUsuarioCompletoBackend(
+        idDocumento: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        val json = JSONObject().apply {
+            put("idUsuario", idDocumento)
+        }
+
+        val body = json.toString()
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val request = Request.Builder()
+            .url(URL_ELIMINAR_USUARIO)
+            .post(body)
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                val result = response.body?.string() ?: ""
+                callback(response.isSuccessful, result)
+            } catch (e: Exception) {
+                callback(false, e.message ?: "Error desconocido")
+            }
+        }.start()
+    }
+    // ------------------------------------------------------------
 
     private fun mostrarAlerta(titulo: String, mensaje: String) {
         val b = AlertDialog.Builder(this)

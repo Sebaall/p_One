@@ -173,13 +173,14 @@
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:layout_marginTop="14dp"
+            android:fontFamily="sans-serif-medium"
+            android:onClick="listcurso"
             android:text="Ver cursos"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:fontFamily="sans-serif-medium"
             app:backgroundTint="#29B6F6"
-            app:rippleColor="#0277BD"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="12dp"
+            app:rippleColor="#0277BD" />
 
     </LinearLayout>
 

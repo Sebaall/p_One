@@ -91,77 +91,97 @@ class Login : AppCompatActivity() {
 
         btnLogin.isEnabled = false
 
-        auth.signInWithEmailAndPassword(correo, pass)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    if (user != null && user.isEmailVerified) {
-                        FirebaseFirestore.getInstance()
-                            .collection("users")
-                            .document(user.uid)
-                            .get()
-                            .addOnSuccessListener { snap ->
-                                val data = snap.data
-
-                                val nombre = data?.get("nombre")?.toString()?.trim().orEmpty()
-                                val apellido = data?.get("apellido")?.toString()?.trim().orEmpty()
-                                val nombreUsuario = data?.get("nombreusuario")?.toString()?.trim().orEmpty()
-
-                                val displayName = when {
-                                    nombre.isNotBlank() || apellido.isNotBlank() ->
-                                        listOf(nombre, apellido).filter { it.isNotBlank() }.joinToString(" ")
-                                    nombreUsuario.isNotBlank() -> nombreUsuario
-                                    else -> user.email?.substringBefore('@') ?: "Usuario"
-                                }
-
-                                val rolesList = (data?.get("roles") as? List<*>)?.map { it.toString() } ?: emptyList()
-                                val rolLegible = when {
-                                    rolesList.contains("MENU_ADMIN") -> "Administrador"
-                                    rolesList.contains("MENU_PROFESOR") -> "Profesor"
-                                    else -> "Alumno"
-                                }
-
-                                mostrarAlerta("Inicio exitoso", "Bienvenido $rolLegible $displayName")
-
-                                val esAdmin = rolesList.contains("MENU_ADMIN")
-                                val esProfe = rolesList.contains("MENU_PROFESOR")
-
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    when {
-                                        esAdmin -> {
-                                            startActivity(Intent(this, menuAdmin::class.java))
-                                        }
-                                        esProfe -> {
-                                            val intentProfe = Intent(this, bienvenidaScreenProfe::class.java)
-                                            intentProfe.putExtra("nombre", displayName)
-                                            startActivity(intentProfe)
-                                        }
-                                        else -> {
-                                            startActivity(Intent(this, ScreenApodo::class.java))
-                                        }
-                                    }
-                                    finish()
-                                }, 1200)
-                            }
-                            .addOnFailureListener {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    startActivity(Intent(this, ScreenApodo::class.java))
-                                    finish()
-                                }, 1200)
-                            }
-
-                    } else {
-                        mostrarAlerta("Verifica tu cuenta", "Debes confirmar tu correo antes de ingresar.")
-                        auth.signOut()
-                        btnLogin.isEnabled = true
-                    }
-                } else {
-                    val msg = task.exception?.localizedMessage ?: "Correo o contraseña incorrectos."
-                    mostrarAlerta("Error", "Correo o contraseña incorrectos")
+        // 1) PRIMERO: revisar en Firestore si existe el correo
+        firebase.collection("users")
+            .whereEqualTo("correo", correo)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { snap ->
+                if (snap.isEmpty) {
+                    // CORREO NO EXISTE EN BD
+                    mostrarAlerta("Error", "No existe una cuenta registrada con este correo.")
                     btnLogin.isEnabled = true
+                    limpiar()
+                } else {
+                    // 2) SI EXISTE, recién aquí intentamos login en Auth
+                    auth.signInWithEmailAndPassword(correo, pass)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val user = auth.currentUser
+                                if (user != null && user.isEmailVerified) {
+                                    FirebaseFirestore.getInstance()
+                                        .collection("users")
+                                        .document(user.uid)
+                                        .get()
+                                        .addOnSuccessListener { snapUser ->
+                                            val data = snapUser.data
+
+                                            val nombre = data?.get("nombre")?.toString()?.trim().orEmpty()
+                                            val apellido = data?.get("apellido")?.toString()?.trim().orEmpty()
+                                            val nombreUsuario = data?.get("nombreusuario")?.toString()?.trim().orEmpty()
+
+                                            val displayName = when {
+                                                nombre.isNotBlank() || apellido.isNotBlank() ->
+                                                    listOf(nombre, apellido)
+                                                        .filter { it.isNotBlank() }
+                                                        .joinToString(" ")
+                                                nombreUsuario.isNotBlank() -> nombreUsuario
+                                                else -> user.email?.substringBefore('@') ?: "Usuario"
+                                            }
+
+                                            val rolesList = (data?.get("roles") as? List<*>)?.map { it.toString() } ?: emptyList()
+                                            val rolLegible = when {
+                                                rolesList.contains("MENU_ADMIN") -> "Administrador"
+                                                rolesList.contains("MENU_PROFESOR") -> "Profesor"
+                                                else -> "Alumno"
+                                            }
+
+                                            mostrarAlerta("Inicio exitoso", "Bienvenido $rolLegible $displayName")
+
+                                            val esAdmin = rolesList.contains("MENU_ADMIN")
+                                            val esProfe = rolesList.contains("MENU_PROFESOR")
+
+                                            Handler(Looper.getMainLooper()).postDelayed({
+                                                when {
+                                                    esAdmin -> {
+                                                        startActivity(Intent(this, menuAdmin::class.java))
+                                                    }
+                                                    esProfe -> {
+                                                        val intentProfe = Intent(this, bienvenidaScreenProfe::class.java)
+                                                        intentProfe.putExtra("nombre", displayName)
+                                                        startActivity(intentProfe)
+                                                    }
+                                                    else -> {
+                                                        startActivity(Intent(this, ScreenApodo::class.java))
+                                                    }
+                                                }
+                                                finish()
+                                            }, 1200)
+                                        }
+                                        .addOnFailureListener {
+                                            Handler(Looper.getMainLooper()).postDelayed({
+                                                startActivity(Intent(this, ScreenApodo::class.java))
+                                                finish()
+                                            }, 1200)
+                                        }
+
+                                } else {
+                                    mostrarAlerta("Verifica tu cuenta", "Debes confirmar tu correo antes de ingresar.")
+                                    auth.signOut()
+                                    btnLogin.isEnabled = true
+                                }
+                            } else {
+                                // CORREO EXISTE EN BD, PERO FALLÓ AUTH → CLAVE MAL (o credenciales)
+                                mostrarAlerta("Error", "Correo o contraseña incorrectos.")
+                                btnLogin.isEnabled = true
+                            }
+                        }
                 }
             }
-
+            .addOnFailureListener {
+                mostrarAlerta("Error", "No se pudo verificar el correo, intenta nuevamente.")
+                btnLogin.isEnabled = true
+            }
     }
 
     private fun mostrarModalReset() {

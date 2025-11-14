@@ -177,7 +177,8 @@
             android:textStyle="bold"
             app:backgroundTint="#29B6F6"
             app:rippleColor="#0277BD"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="12dp"
+            android:onClick="curdlistroles"/>
 
         <ProgressBar
             android:id="@+id/progressRol"

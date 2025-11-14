@@ -13,6 +13,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.p_one.Models.Users
 import com.example.p_one.R
 import com.google.firebase.firestore.FirebaseFirestore
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class listcrudProfesor : AppCompatActivity() {
 
@@ -23,6 +28,12 @@ class listcrudProfesor : AppCompatActivity() {
     private lateinit var adapterProfesores: ArrayAdapter<String>
 
     private val mapaCursos = mutableMapOf<String, String>()
+
+    private val client = OkHttpClient()
+    private val BASE_URL = "https://pone-backend-kz8c.onrender.com"
+
+    private val URL_ELIMINAR_USUARIO =
+        "$BASE_URL/eliminarUsuarioCompleto"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +57,6 @@ class listcrudProfesor : AppCompatActivity() {
 
         lvProfesores.adapter = adapterProfesores
 
-        // Primero cargamos cursos, luego profesores
         cargarMapaCursos {
             cargarProfesores()
             configurarEventosLista()
@@ -154,9 +164,8 @@ class listcrudProfesor : AppCompatActivity() {
         intent.putExtra("apellido", profesor.apellido)
 
         val cursosIds = profesor.cursosAsignados ?: emptyList()
-
-        // IMPORTANTE: misma clave que leeremos en crudProfesorEdit
         intent.putExtra("cursosAsignados", ArrayList(cursosIds))
+        intent.putExtra("correo", profesor.correo)
 
         startActivity(intent)
     }
@@ -175,21 +184,48 @@ class listcrudProfesor : AppCompatActivity() {
     private fun eliminarProfesor(profesor: Users, position: Int) {
         val id = profesor.uidAuth ?: return
 
-        db.collection("users")
-            .document(id)
-            .delete()
-            .addOnSuccessListener {
-                mostrarAlerta("Éxito", "Profesor eliminado.")
+        eliminarUsuarioCompletoBackend(id) { ok, mensaje ->
+            runOnUiThread {
+                if (ok) {
+                    val textoItem = adapterProfesores.getItem(position)
+                    if (textoItem != null) adapterProfesores.remove(textoItem)
 
-                val textoItem = adapterProfesores.getItem(position)
-                if (textoItem != null) adapterProfesores.remove(textoItem)
+                    listaProfesores.removeAt(position)
+                    adapterProfesores.notifyDataSetChanged()
 
-                listaProfesores.removeAt(position)
-                adapterProfesores.notifyDataSetChanged()
+                    mostrarAlerta("Éxito", "Profesor eliminado correctamente.")
+                } else {
+                    mostrarAlerta("Error", "Error al eliminar: $mensaje")
+                }
             }
-            .addOnFailureListener { e ->
-                mostrarAlerta("Error", "Error al eliminar: ${e.message}")
+        }
+    }
+
+    private fun eliminarUsuarioCompletoBackend(
+        idDocumento: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        val json = JSONObject().apply {
+            put("idUsuario", idDocumento)
+        }
+
+        val body = json.toString()
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val request = Request.Builder()
+            .url(URL_ELIMINAR_USUARIO)
+            .post(body)
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                val result = response.body?.string() ?: ""
+                callback(response.isSuccessful, result)
+            } catch (e: Exception) {
+                callback(false, e.message ?: "Error desconocido")
             }
+        }.start()
     }
 
     private fun mostrarAlerta(titulo: String, mensaje: String) {

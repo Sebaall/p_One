@@ -130,15 +130,18 @@ class crudProfesor : AppCompatActivity() {
                         auth.setLanguageCode("es")
                         u?.sendEmailVerification()
                             ?.addOnCompleteListener { t ->
+                                // Actualizar cursos en la colección "Cursos" para dejar profesorId = uid
+                                actualizarCursosDeProfesor(uid)
+
                                 if (t.isSuccessful) {
                                     mostrarAlerta(
                                         "Éxito",
-                                        "Profesor $nombre creado. Se envió verificación a su correo."
+                                        "Profesor $nombre creado. Se envió verificación a su correo y se asignaron los cursos."
                                     )
                                 } else {
                                     mostrarAlerta(
                                         "Aviso",
-                                        "Profesor creado, pero no se pudo enviar la verificación."
+                                        "Profesor creado y cursos asignados, pero no se pudo enviar la verificación."
                                     )
                                 }
                                 documentoId = uid
@@ -160,7 +163,8 @@ class crudProfesor : AppCompatActivity() {
                 }
             }
     }
-    fun curdprofe(view: View){
+
+    fun curdprofe(view: View) {
         startActivity(Intent(this, listcrudProfesor::class.java))
     }
 
@@ -263,4 +267,18 @@ class crudProfesor : AppCompatActivity() {
         b.create().show()
     }
 
+    // --- NUEVO: actualiza los documentos de "Cursos" con el profesor creado ---
+    private fun actualizarCursosDeProfesor(idProfesor: String) {
+        if (cursosSeleccionadosIds.isEmpty()) return
+
+        for (idCurso in cursosSeleccionadosIds) {
+            firebase.collection("Cursos")
+                .document(idCurso)
+                .update("profesorId", idProfesor)
+                .addOnFailureListener { e ->
+                    // Si quieres puedes mostrar algo, pero lo dejo silencioso para no spamear alertas
+                    // mostrarAlerta("Aviso", "No se pudo actualizar el curso $idCurso: ${e.message}")
+                }
+        }
+    }
 }

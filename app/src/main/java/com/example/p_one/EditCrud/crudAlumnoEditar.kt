@@ -12,6 +12,11 @@ import com.example.p_one.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.firestore.FirebaseFirestore
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class crudAlumnoEditar : AppCompatActivity() {
 
@@ -22,6 +27,7 @@ class crudAlumnoEditar : AppCompatActivity() {
     private lateinit var txtApodoAlumno: TextInputEditText
     private lateinit var txtEdadAlumno: TextInputEditText
     private lateinit var tvCorreoAlumno: MaterialTextView
+    private lateinit var txtContrasenaAlumno: TextInputEditText
 
     private var documentoId: String? = null
 
@@ -30,6 +36,11 @@ class crudAlumnoEditar : AppCompatActivity() {
     private var apodoOriginal: String = ""
     private var edadOriginal: Int = 0
     private var correoOriginal: String = ""
+
+    private val client = OkHttpClient()
+    private val BASE_URL = "https://pone-backend-kz8c.onrender.com"
+    private val URL_CAMBIAR_CLAVE =
+        "$BASE_URL/cambiarPasswordUsuario"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +60,7 @@ class crudAlumnoEditar : AppCompatActivity() {
         txtApodoAlumno = findViewById(R.id.txt_apodo)
         txtEdadAlumno = findViewById(R.id.txt_edad)
         tvCorreoAlumno = findViewById(R.id.tvCorreoAlumno)
+        txtContrasenaAlumno = findViewById(R.id.txt_contrasena_alumno)
 
         documentoId = intent.getStringExtra("docId")
 
@@ -63,7 +75,6 @@ class crudAlumnoEditar : AppCompatActivity() {
         txtApodoAlumno.setText(apodoOriginal)
         if (edadOriginal != 0) txtEdadAlumno.setText(edadOriginal.toString())
 
-        // Mostrar correo como label
         tvCorreoAlumno.text = "Correo: $correoOriginal"
 
         if (documentoId.isNullOrEmpty()) {
@@ -79,6 +90,7 @@ class crudAlumnoEditar : AppCompatActivity() {
         val apellidoNuevo = txtApellidoAlumno.text.toString().trim()
         val apodoNuevo = txtApodoAlumno.text.toString().trim()
         val edadNueva = txtEdadAlumno.text.toString().toIntOrNull() ?: 0
+        val contrasenaNueva = txtContrasenaAlumno.text?.toString()?.trim().orEmpty()
 
         val datos = mutableMapOf<String, Any>()
 
@@ -87,29 +99,81 @@ class crudAlumnoEditar : AppCompatActivity() {
         if (apodoNuevo != apodoOriginal) datos["apodoAlumno"] = apodoNuevo
         if (edadNueva != edadOriginal && edadNueva > 0) datos["edadAlumno"] = edadNueva
 
-        if (datos.isEmpty()) {
+        if (datos.isNotEmpty() || contrasenaNueva.isNotEmpty()) {
+            datos["updatedAt"] = System.currentTimeMillis()
+        }
+
+        if (datos.isEmpty() && contrasenaNueva.isEmpty()) {
             mostrarAlerta("Aviso", "No hay cambios para guardar.")
             return
         }
-
-        datos["updatedAt"] = System.currentTimeMillis()
 
         firebase.collection("users")
             .document(id)
             .update(datos)
             .addOnSuccessListener {
-                mostrarAlerta("Éxito", "Datos del alumno actualizados.")
+                if (contrasenaNueva.isNotEmpty()) {
+                    cambiarClaveBackend(id, contrasenaNueva) { ok, mensaje ->
+                        runOnUiThread {
+                            if (ok) {
+                                mostrarAlerta("Éxito", "Alumno actualizado y contraseña cambiada.")
+                            } else {
+                                mostrarAlerta(
+                                    "Aviso",
+                                    "Datos actualizados, pero la contraseña no se pudo cambiar.\n$mensaje"
+                                )
+                            }
 
-                android.os.Handler(mainLooper).postDelayed({
-                    val intent = Intent(this, listcrudAlumno::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                }, 3000)
+                            android.os.Handler(mainLooper).postDelayed({
+                                val intent = Intent(this, listcrudAlumno::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                                finish()
+                            }, 3000)
+                        }
+                    }
+                } else {
+                    mostrarAlerta("Éxito", "Datos del alumno actualizados.")
+                    android.os.Handler(mainLooper).postDelayed({
+                        val intent = Intent(this, listcrudAlumno::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        finish()
+                    }, 3000)
+                }
             }
             .addOnFailureListener {
                 mostrarAlerta("Error", it.message ?: "No se pudo actualizar el alumno.")
             }
+    }
+
+    private fun cambiarClaveBackend(
+        idUsuario: String,
+        nuevaClave: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        val json = JSONObject().apply {
+            put("idUsuario", idUsuario)
+            put("nuevaPassword", nuevaClave)
+        }
+
+        val body = json.toString()
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val request = Request.Builder()
+            .url(URL_CAMBIAR_CLAVE)
+            .post(body)
+            .build()
+
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                val result = response.body?.string() ?: ""
+                callback(response.isSuccessful, result)
+            } catch (e: Exception) {
+                callback(false, e.message ?: "Error desconocido")
+            }
+        }.start()
     }
 
     fun cancelarEdicion(view: View) {
