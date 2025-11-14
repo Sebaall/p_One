@@ -6,11 +6,11 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".crudAdmin.crudAlumno"
-    android:background="@drawable/backgroundventanas">
+    android:background="@drawable/backgroundventanas"
+    tools:context=".EditCrud.crudAlumnoEditar">
 
     <LinearLayout
-        android:id="@+id/main_container"
+        android:id="@+id/main_container_alumno"
         android:layout_width="379dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -25,10 +25,10 @@
 
         <!-- TÍTULO -->
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvTituloCrudAlumno"
+            android:id="@+id/tvTituloCrudAlumnoEditar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Registrar alumno"
+            android:text="Editar alumno"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#000000"
@@ -37,10 +37,10 @@
 
         <!-- SUBTÍTULO -->
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvSubtituloCrudAlumno"
+            android:id="@+id/tvSubtituloCrudAlumnoEditar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Completa los datos para registrar al alumno en P-One y MathQuiz."
+            android:text="Modifica los datos del alumno seleccionado."
             android:textSize="14sp"
             android:textColor="#555555"
             android:gravity="center"
@@ -53,24 +53,40 @@
             android:background="#FFE0B2"
             android:layout_marginBottom="16dp" />
 
+        <!-- Correo solo lectura -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvCorreoAlumno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Correo:"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:padding="10dp"
+            android:background="#FFF3E0"
+            android:layout_marginBottom="14dp"
+            android:gravity="center_vertical"/>
+
         <!-- Nombre -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="8dp"
-            app:boxBackgroundMode="outline"
             app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
             app:boxStrokeColor="#000000"
             app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:cornerRadius="12dp">
+            app:boxStrokeWidthFocused="2dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Nombre"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Apellido -->
@@ -78,19 +94,22 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="8dp"
-            app:boxBackgroundMode="outline"
             app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
             app:boxStrokeColor="#000000"
             app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:cornerRadius="12dp">
+            app:boxStrokeWidthFocused="2dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_apellido"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Apellido"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Apodo -->
@@ -98,109 +117,46 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="8dp"
-            app:boxBackgroundMode="outline"
             app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
             app:boxStrokeColor="#000000"
             app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:cornerRadius="12dp">
+            app:boxStrokeWidthFocused="2dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_apodo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Apodo"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Curso -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textViewCurso"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Curso"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"/>
-
-        <Spinner
-            android:id="@+id/spinner_curso"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="10dp"/>
 
         <!-- Edad -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="8dp"
-            app:boxBackgroundMode="outline"
             app:boxBackgroundColor="#FFFFFF"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
             app:boxStrokeColor="#000000"
             app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:cornerRadius="12dp">
+            app:boxStrokeWidthFocused="2dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_edad"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Edad"
-                android:inputType="number"/>
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Correo -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            app:boxBackgroundMode="outline"
-            app:boxBackgroundColor="#FFFFFF"
-            app:boxStrokeColor="#000000"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:cornerRadius="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_correo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Correo"
-                android:inputType="textEmailAddress"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Contraseña -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            app:boxBackgroundMode="outline"
-            app:boxBackgroundColor="#FFFFFF"
-            app:boxStrokeColor="#000000"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeWidthFocused="2dp"
-            app:endIconMode="password_toggle"
-            app:cornerRadius="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_contrasena"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Contraseña"
-                android:inputType="textPassword"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Texto ayuda -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvAyudaCrudAlumno"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="El alumno podrá usar este correo y contraseña para ingresar."
-            android:textColor="#777777"
-            android:textSize="12sp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="10dp"/>
 
         <!-- BOTONES -->
         <LinearLayout
@@ -211,44 +167,30 @@
             android:layout_marginTop="10dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnVolverAlumno"
+                android:id="@+id/btnCancelarAlumno"
                 android:layout_width="130dp"
                 android:layout_height="53dp"
                 android:layout_marginEnd="10dp"
-                android:text="Volver"
-                android:textStyle="bold"
+                android:onClick="cancelarEdicion"
+                android:text="Cancelar"
                 android:textColor="#FFFFFF"
-                app:backgroundTint="#FFA726"
-                app:rippleColor="#CC7A00"
-                app:cornerRadius="12dp"/>
+                android:textStyle="bold"
+                app:backgroundTint="#B0BEC5"
+                app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCrearAlumno"
+                android:id="@+id/btnEditarAlumno"
                 android:layout_width="130dp"
                 android:layout_height="53dp"
                 android:layout_marginStart="10dp"
-                android:text="Crear alumno"
-                android:textStyle="bold"
+                android:onClick="editarAlumno"
+                android:text="Guardar cambios"
                 android:textColor="#FFFFFF"
-                android:onClick="crearAlumno"
+                android:textStyle="bold"
                 app:backgroundTint="#FFA726"
-                app:rippleColor="#CC7A00"
-                app:cornerRadius="12dp"/>
+                app:cornerRadius="12dp" />
         </LinearLayout>
 
-        <!-- LISTA ABAJO -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVerListaAlumnos"
-            android:layout_width="match_parent"
-            android:layout_height="53dp"
-            android:layout_marginTop="14dp"
-            android:onClick="curdlistalum"
-            android:text="Ver lista alumnos"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            app:backgroundTint="#29B6F6"
-            app:cornerRadius="12dp"
-            app:rippleColor="#0277BD" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

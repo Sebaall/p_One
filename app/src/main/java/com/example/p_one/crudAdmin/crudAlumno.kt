@@ -1,5 +1,6 @@
 package com.example.p_one.crudAdmin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -10,6 +11,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.EditCrud.listcrudAdmin
+import com.example.p_one.EditCrud.listcrudAlumno
 import com.example.p_one.Models.Curso
 import com.example.p_one.Models.Users
 import com.example.p_one.R
@@ -256,5 +259,8 @@ class crudAlumno : AppCompatActivity() {
             .addOnFailureListener { e ->
                 mostrarAlerta("Error", e.message ?: "No se pudo cargar cursos.")
             }
+    }
+    fun curdlistalum(view: View){
+        startActivity(Intent(this, listcrudAlumno::class.java))
     }
 }

@@ -15,56 +15,85 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.P_One">
         <activity
+            android:name=".EditCrud.listcrudAlumno"
+            android:exported="false"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".EditCrud.crudAlumnoEditar"
+            android:exported="false"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".EditCrud.listcrudAdmin"
+            android:exported="false"
+            android:screenOrientation="locked" />
+        <activity
+            android:name=".crudAdmin.crudAdministradorEditar"
+            android:exported="false"
+            android:screenOrientation="locked" />
+        <activity
             android:name=".listCursosProfe"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".listAlumnos"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".listPuntuacionProfe"
-            android:exported="false" />
-
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".bienvenidaScreenProfe"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".bienvenidaScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".Ranking"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".Results"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".mathQuiz"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".ScreenApodo"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".crudAdmin.crudEditRol"
-            android:exported="false" />
-
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".crudAdmin.crudCursos"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".crudAdmin.crudAdministrador"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".crudAdmin.crudProfesor"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".crudAdmin.crudRoles"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".menuProfesor"
-            android:exported="false" />
-
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".menuAdmin"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked" />
         <activity
             android:name=".crud_registro"
             android:exported="false"

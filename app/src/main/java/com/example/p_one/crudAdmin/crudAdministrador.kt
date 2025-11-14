@@ -1,5 +1,6 @@
 package com.example.p_one.crudAdmin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.EditCrud.listcrudAdmin
 import com.example.p_one.Models.Users
 import com.example.p_one.R
 import com.google.android.material.textfield.TextInputEditText
@@ -138,5 +140,8 @@ class crudAdministrador : AppCompatActivity() {
         b.setMessage(mensaje)
         b.setPositiveButton("Aceptar", null)
         b.create().show()
+    }
+    fun curdlist(view: View){
+        startActivity(Intent(this, listcrudAdmin::class.java))
     }
 }
