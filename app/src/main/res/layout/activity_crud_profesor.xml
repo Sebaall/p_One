@@ -6,7 +6,7 @@
     android:id="@+id/login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".crudAdmin.crudProfesor"
+    tools:context=".AdminMenu.CrudAdmin.crudProfesor"
     android:background="@drawable/backgroundventanas">
 
     <LinearLayout

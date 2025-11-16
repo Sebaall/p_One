@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroundventanas"
-    tools:context=".EditCrud.listcrudCurso">
+    tools:context=".AdminMenu.ListCrudAdmin.listcrudCurso">
 
     <LinearLayout
         android:id="@+id/main_container_list_curso"

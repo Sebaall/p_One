@@ -17,37 +17,37 @@
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
         <activity
-            android:name=".EditCrud.listcrudRoles"
+            android:name=".AdminMenu.ListCrudAdmin.listcrudRoles"
             android:exported="false" />
         <activity
-            android:name=".EditCrud.listcrudCurso"
+            android:name=".AdminMenu.ListCrudAdmin.listcrudCurso"
             android:exported="false" />
         <activity
-            android:name=".EditCrud.listcrudProfesor"
+            android:name=".AdminMenu.ListCrudAdmin.listcrudProfesor"
             android:exported="false" />
         <activity
-            android:name=".EditCrud.crudRolesEdit"
+            android:name=".AdminMenu.EditCrudAdmin.crudRolesEdit"
             android:exported="false" />
         <activity
-            android:name=".EditCrud.crudProfesorEdit"
+            android:name=".AdminMenu.EditCrudAdmin.crudProfesorEdit"
             android:exported="false" />
         <activity
-            android:name=".EditCrud.crudCursoEditar"
+            android:name=".AdminMenu.EditCrudAdmin.crudCursoEditar"
             android:exported="false" />
         <activity
-            android:name=".EditCrud.listcrudAlumno"
+            android:name=".AdminMenu.ListCrudAdmin.listcrudAlumno"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".EditCrud.crudAlumnoEditar"
+            android:name=".AdminMenu.EditCrudAdmin.crudAlumnoEditar"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".EditCrud.listcrudAdmin"
+            android:name=".AdminMenu.ListCrudAdmin.listcrudAdmin"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crudAdmin.crudAdministradorEditar"
+            android:name=".CrudAdmin.crudAdministradorEditar"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
@@ -63,67 +63,67 @@
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".bienvenidaScreenProfe"
+            android:name=".Main.Bienvenidas.bienvenidaScreenProfe"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".bienvenidaScreen"
+            android:name=".Main.Bienvenidas.bienvenidaScreen"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".Ranking"
+            android:name=".MenuAlumno.Ranking"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".Results"
+            android:name=".MenuAlumno.Results"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".mathQuiz"
+            android:name=".MenuAlumno.mathQuiz"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".ScreenApodo"
+            android:name=".MenuAlumno.ScreenApodo"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crudAdmin.crudEditRol"
+            android:name=".AdminMenu.CrudAdmin.crudEditRol"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crudAdmin.crudCursos"
+            android:name=".AdminMenu.CrudAdmin.crudCursos"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crudAdmin.crudAdministrador"
+            android:name=".AdminMenu.CrudAdmin.crudAdministrador"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crudAdmin.crudProfesor"
+            android:name=".AdminMenu.CrudAdmin.crudProfesor"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crudAdmin.crudRoles"
+            android:name=".AdminMenu.CrudAdmin.crudRoles"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".menuProfesor"
+            android:name=".Main.menuProfesor"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".menuAdmin"
+            android:name=".Main.menuAdmin"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crud_registro"
+            android:name=".Main.crud_registro"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".crudAdmin.crudAlumno"
+            android:name=".AdminMenu.CrudAdmin.crudAlumno"
             android:exported="false"
             android:screenOrientation="locked" />
         <activity
-            android:name=".Login"
+            android:name=".Main.Login"
             android:exported="true"
             android:screenOrientation="locked">
             <intent-filter>
