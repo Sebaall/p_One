@@ -1,5 +1,6 @@
 package com.example.p_one.MenuAlumno
 
+import MathQuizResultado
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -59,7 +60,6 @@ class mathQuiz : AppCompatActivity() {
     private var apodoAlumno: String = "Invitado"
     private var uidAuth: String? = null
 
-    // ---------- ALERTA ----------
     private fun mostrarAlerta(titulo: String, mensaje: String) {
         val b = AlertDialog.Builder(this)
         b.setTitle(titulo)
@@ -67,7 +67,6 @@ class mathQuiz : AppCompatActivity() {
         b.setPositiveButton("Aceptar", null)
         b.create().show()
     }
-    // ------------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -268,19 +267,19 @@ class mathQuiz : AppCompatActivity() {
     private fun guardarResultadoEnFirestore() {
         val porcentaje = (correctas * 100.0) / totalPreguntas.toDouble()
 
-        val data = hashMapOf(
-            "uidAuth" to uidAuth,
-            "apodo" to apodoAlumno,
-            "correctas" to correctas,
-            "incorrectas" to incorrectas,
-            "totalPreguntas" to totalPreguntas,
-            "porcentaje" to porcentaje,
-            "fechaUltimoJuego" to Timestamp.now()
+        val resultado = MathQuizResultado(
+            uidAuth = uidAuth,
+            apodo = apodoAlumno,
+            correctas = correctas,
+            incorrectas = incorrectas,
+            totalPreguntas = totalPreguntas,
+            porcentaje = porcentaje,
+            fechaUltimoJuego = Timestamp.now()
         )
 
         db.collection("mathQuizResultados")
             .document(apodoAlumno)
-            .set(data, SetOptions.merge())
+            .set(resultado, SetOptions.merge())
             .addOnSuccessListener {
                 val intent = Intent(this, Results::class.java)
                 intent.putExtra("apodoAlumno", apodoAlumno)
@@ -295,4 +294,5 @@ class mathQuiz : AppCompatActivity() {
                 mostrarAlerta("Error", "Error al guardar resultados: ${e.message}")
             }
     }
+
 }

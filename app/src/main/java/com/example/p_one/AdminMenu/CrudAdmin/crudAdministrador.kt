@@ -29,6 +29,11 @@ class crudAdministrador : AppCompatActivity() {
 
     private var documentoId: String? = null  // por si luego haces modo edición
 
+    // 👉 solo primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,8 +55,8 @@ class crudAdministrador : AppCompatActivity() {
     }
 
     fun crearAdministrador(view: View) {
-        val nombre = txtNombreAdmin.text?.toString()?.trim().orEmpty()
-        val apellido = txtApellidoAdmin.text?.toString()?.trim().orEmpty()
+        val nombre = capitalizar(txtNombreAdmin.text?.toString().orEmpty())
+        val apellido = capitalizar(txtApellidoAdmin.text?.toString().orEmpty())
         val correo = txtCorreoAdmin.text?.toString()?.trim().orEmpty()
         val contrasena = txtContrasenaAdmin.text?.toString()?.trim().orEmpty()
 
@@ -141,6 +146,7 @@ class crudAdministrador : AppCompatActivity() {
         b.setPositiveButton("Aceptar", null)
         b.create().show()
     }
+
     fun curdlist(view: View){
         startActivity(Intent(this, listcrudAdmin::class.java))
     }

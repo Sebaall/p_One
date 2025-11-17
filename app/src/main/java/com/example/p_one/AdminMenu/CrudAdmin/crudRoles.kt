@@ -34,6 +34,11 @@ class crudRoles : AppCompatActivity() {
     private var uidCreador: String = ""
     private var nombreCreador: String = ""   // <-- nombre del admin
 
+    // misma función que antes
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -113,8 +118,8 @@ class crudRoles : AppCompatActivity() {
     }
 
     fun crearRol(view: View) {
-        val nombre = txtNombreRol.text.toString().trim()
-        val descripcion = txtDescripcionRol.text.toString().trim()
+        val nombre = capitalizar(txtNombreRol.text.toString())
+        val descripcion = capitalizar(txtDescripcionRol.text.toString())
 
         if (nombre.isEmpty() || descripcion.isEmpty()) {
             mostrarAlerta("Error", "Ingresa nombre y descripción.")

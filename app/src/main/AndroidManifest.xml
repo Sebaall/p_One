@@ -18,22 +18,28 @@
         android:networkSecurityConfig="@xml/network_security_config">
         <activity
             android:name=".AdminMenu.ListCrudAdmin.listcrudRoles"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".AdminMenu.ListCrudAdmin.listcrudCurso"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".AdminMenu.ListCrudAdmin.listcrudProfesor"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".AdminMenu.EditCrudAdmin.crudRolesEdit"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".AdminMenu.EditCrudAdmin.crudProfesorEdit"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".AdminMenu.EditCrudAdmin.crudCursoEditar"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="locked"/>
         <activity
             android:name=".AdminMenu.ListCrudAdmin.listcrudAlumno"
             android:exported="false"

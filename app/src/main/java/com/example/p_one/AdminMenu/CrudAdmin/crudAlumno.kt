@@ -41,12 +41,16 @@ class crudAlumno : AppCompatActivity() {
     private var documentoId: String? = null
     private lateinit var spCursos: Spinner
 
+    // 👉 función para dejar solo la primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_crud_alumno)
 
-        // 🔧 Aquí estaba el problema: el id correcto en tu layout es "main", no "login"
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -72,9 +76,9 @@ class crudAlumno : AppCompatActivity() {
     }
 
     fun crearAlumno(view: View) {
-        val name = txt_nombre.text.toString().trim()
-        val apellido = txt_apellido.text.toString().trim()
-        val apodo = txt_apodo.text.toString().trim()
+        val name = capitalizar(txt_nombre.text.toString())
+        val apellido = capitalizar(txt_apellido.text.toString())
+        val apodo = capitalizar(txt_apodo.text.toString())
         val edadTxt = txt_edad.text.toString().trim()
         val correo = txt_correo.text.toString().trim()
         val contrasena = txt_contrasena.text.toString().trim()
@@ -241,9 +245,9 @@ class crudAlumno : AppCompatActivity() {
 
                     val label = when {
                         !curso.nombreCurso.isNullOrBlank() && !curso.nivel.isNullOrBlank() ->
-                            "${curso.nombreCurso} – ${curso.nivel}"
-                        !curso.nombreCurso.isNullOrBlank() -> curso.nombreCurso!!
-                        !curso.nivel.isNullOrBlank() -> curso.nivel!!
+                            "${capitalizar(curso.nombreCurso!!)} – ${capitalizar(curso.nivel!!)}"
+                        !curso.nombreCurso.isNullOrBlank() -> capitalizar(curso.nombreCurso!!)
+                        !curso.nivel.isNullOrBlank() -> capitalizar(curso.nivel!!)
                         else -> "Curso sin nombre"
                     }
 
@@ -259,6 +263,7 @@ class crudAlumno : AppCompatActivity() {
                 mostrarAlerta("Error", e.message ?: "No se pudo cargar cursos.")
             }
     }
+
     fun curdlistalum(view: View){
         startActivity(Intent(this, listcrudAlumno::class.java))
     }

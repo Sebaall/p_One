@@ -20,6 +20,11 @@ class ScreenApodo : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
 
+    // 👉 FUNCION QUE ME PEDISTE (solo esto se agregó)
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -71,7 +76,7 @@ class ScreenApodo : AppCompatActivity() {
         btnComenzarQuiz = findViewById(R.id.btnComenzarQuiz)
 
         btnComenzarQuiz.setOnClickListener {
-            val apodoIngresado = etApodo.text.toString().trim()
+            val apodoIngresado = capitalizar(etApodo.text.toString()) // 👉 SOLO ESTA LÍNEA USA LA FUNCIÓN
 
             if (apodoIngresado.isEmpty()) {
                 Toast.makeText(this, "Ingresa un apodo", Toast.LENGTH_SHORT).show()

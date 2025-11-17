@@ -44,6 +44,11 @@ class crudAlumnoEditar : AppCompatActivity() {
     private val URL_CAMBIAR_CLAVE =
         "$BASE_URL/cambiarPasswordUsuario"
 
+    // solo primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -88,9 +93,9 @@ class crudAlumnoEditar : AppCompatActivity() {
     fun editarAlumno(view: View) {
         val id = documentoId ?: return
 
-        val nombreNuevo = txtNombreAlumno.text.toString().trim()
-        val apellidoNuevo = txtApellidoAlumno.text.toString().trim()
-        val apodoNuevo = txtApodoAlumno.text.toString().trim()
+        val nombreNuevo = capitalizar(txtNombreAlumno.text.toString())
+        val apellidoNuevo = capitalizar(txtApellidoAlumno.text.toString())
+        val apodoNuevo = capitalizar(txtApodoAlumno.text.toString())
         val edadNueva = txtEdadAlumno.text.toString().toIntOrNull() ?: 0
         val contrasenaNueva = txtContrasenaAlumno.text?.toString()?.trim().orEmpty()
 

@@ -33,6 +33,11 @@ class crud_registro : AppCompatActivity() {
     private lateinit var btnRegistrar: Button
     private lateinit var progress: ProgressBar
 
+    // solo primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -61,8 +66,8 @@ class crud_registro : AppCompatActivity() {
 
     private fun registrar() {
         val email = txtEmail.text?.toString()?.trim()?.lowercase().orEmpty()
-        val nombre = txtNombre.text?.toString()?.trim().orEmpty()
-        val apellido = txtApellido.text?.toString()?.trim().orEmpty()
+        val nombre = capitalizar(txtNombre.text?.toString().orEmpty())
+        val apellido = capitalizar(txtApellido.text?.toString().orEmpty())
         val pass = txtPassword.text?.toString().orEmpty()
 
         when {
@@ -94,10 +99,9 @@ class crud_registro : AppCompatActivity() {
                                         val u = res.user
                                         if (u != null) {
 
-                                            // 👇 AQUÍ ES LO ÚNICO QUE CAMBIA PARA AJUSTARSE AL NUEVO Users
                                             val perfil = Users(
                                                 uidAuth = u.uid,
-                                                rol = "Alumno",              // por defecto lo dejas como Alumno
+                                                rol = "Alumno",
                                                 activo = false,
                                                 nombre = nombre,
                                                 apellido = apellido,
@@ -107,7 +111,6 @@ class crud_registro : AppCompatActivity() {
                                                 emailVerificado = false,
                                                 createdAt = System.currentTimeMillis()
                                             )
-                                            // ☝️ el resto de campos (idAlumno, apodo, etc.) quedan null, y está bien
 
                                             db.collection("users").document(u.uid).set(perfil)
                                                 .addOnSuccessListener {

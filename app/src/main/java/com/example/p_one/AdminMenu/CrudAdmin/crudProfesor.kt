@@ -37,10 +37,14 @@ class crudProfesor : AppCompatActivity() {
     private val listaIdsCursos = mutableListOf<String>()
     private val listaLabelsCursos = mutableListOf<String>()
 
-    // aquí guardamos los IDs de cursos que el profe tendrá asignados (1 o más)
     private val cursosSeleccionadosIds = mutableSetOf<String>()
 
-    private var documentoId: String? = null   // por si después quieres modo edición
+    private var documentoId: String? = null
+
+    // función para dejar solo la primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +76,8 @@ class crudProfesor : AppCompatActivity() {
     }
 
     fun crearProfesor(view: View) {
-        val nombre = txtNombre.text?.toString()?.trim().orEmpty()
-        val apellido = txtApellido.text?.toString()?.trim().orEmpty()
+        val nombre = capitalizar(txtNombre.text?.toString().orEmpty())
+        val apellido = capitalizar(txtApellido.text?.toString().orEmpty())
         val correo = txtCorreo.text?.toString()?.trim().orEmpty()
         val contrasena = txtContrasena.text?.toString()?.trim().orEmpty()
 
@@ -92,7 +96,6 @@ class crudProfesor : AppCompatActivity() {
             return
         }
 
-        // Crear usuario en Auth
         auth.createUserWithEmailAndPassword(correo, contrasena)
             .addOnSuccessListener { result ->
                 val uid = result.user?.uid ?: ""
@@ -107,15 +110,12 @@ class crudProfesor : AppCompatActivity() {
                     apellido = apellido,
                     correo = correo,
 
-                    // exclusivos profesor
                     idProfesor = uid,
                     cursosAsignados = cursosAsignados,
 
-                    // roles y permisos
                     roles = listOf("MENU_PROFESOR"),
                     nivelAcceso = 2,
 
-                    // auditoría
                     emailVerificado = false,
                     createdAt = System.currentTimeMillis(),
                     updatedAt = null
@@ -128,9 +128,7 @@ class crudProfesor : AppCompatActivity() {
                         val u = result.user
                         auth.setLanguageCode("es")
                         u?.sendEmailVerification()
-                            ?.addOnCompleteListener { t ->
-                                // Actualizar cursos en la colección "Cursos" para dejar profesorId = uid
-                                actualizarCursosDeProfesor(uid)
+                            ?.addOnCompleteListener { t -> actualizarCursosDeProfesor(uid)
 
                                 if (t.isSuccessful) {
                                     mostrarAlerta(
@@ -196,7 +194,6 @@ class crudProfesor : AppCompatActivity() {
                     listaIdsCursos.add(curso.idCurso ?: document.id)
                 }
 
-                // si ya están seleccionados, refrescamos el texto mostrado
                 actualizarTextoCursosSeleccionados()
             }
             .addOnFailureListener { e ->
@@ -266,7 +263,6 @@ class crudProfesor : AppCompatActivity() {
         b.create().show()
     }
 
-    // --- NUEVO: actualiza los documentos de "Cursos" con el profesor creado ---
     private fun actualizarCursosDeProfesor(idProfesor: String) {
         if (cursosSeleccionadosIds.isEmpty()) return
 
@@ -275,8 +271,7 @@ class crudProfesor : AppCompatActivity() {
                 .document(idCurso)
                 .update("profesorId", idProfesor)
                 .addOnFailureListener { e ->
-                    // Si quieres puedes mostrar algo, pero lo dejo silencioso para no spamear alertas
-                    // mostrarAlerta("Aviso", "No se pudo actualizar el curso $idCurso: ${e.message}")
+
                 }
         }
     }

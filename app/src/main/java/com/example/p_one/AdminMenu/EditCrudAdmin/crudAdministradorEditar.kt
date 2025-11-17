@@ -41,6 +41,11 @@ class crudAdministradorEditar : AppCompatActivity() {
     private val URL_CAMBIAR_CLAVE =
         "$BASE_URL/cambiarPasswordUsuario"
 
+    // 👉 función para dejar solo la primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -82,8 +87,8 @@ class crudAdministradorEditar : AppCompatActivity() {
             return
         }
 
-        val nombreNuevo = txtNombreAdmin.text?.toString()?.trim().orEmpty()
-        val apellidoNuevo = txtApellidoAdmin.text?.toString()?.trim().orEmpty()
+        val nombreNuevo = capitalizar(txtNombreAdmin.text?.toString().orEmpty())
+        val apellidoNuevo = capitalizar(txtApellidoAdmin.text?.toString().orEmpty())
         val contrasenaNueva = txtContrasenaAdmin.text?.toString()?.trim().orEmpty()
 
         val datosActualizados = mutableMapOf<String, Any>()

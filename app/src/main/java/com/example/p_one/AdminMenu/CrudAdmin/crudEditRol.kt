@@ -27,17 +27,19 @@ class crudEditRol : AppCompatActivity() {
     private val listaUserIds = mutableListOf<String>()
     private val listaUserLabels = mutableListOf<String>()
 
-    // listas de roles obtenidos desde "Roles"
     private val listaRolesNombres = mutableListOf<String>()
     private val listaRolesPermisos = mutableListOf<String>()
     private val listaRolesNivelAcceso = mutableListOf<Long>()
 
-    // rol actual del usuario seleccionado (para reflejarlo en el spinner)
     private var rolActualUsuario: String? = null
 
-    // ⚠️ ADMIN QUE NO SE PUEDE EDITAR ROL
     private val adminProtegidoUid = "9o51Mc4SWvZIV02pZOpSACFxJSZ2"
     private val adminProtegidoCorreo = "sebastian.leon1@virginiogomez.cl"
+
+    // ✅ solo primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,9 +95,12 @@ class crudEditRol : AppCompatActivity() {
                 for (doc in snap.documents) {
                     try {
                         val uid = doc.id
-                        val nombre = (doc.getString("nombre") ?: "").trim()
-                        val apellido = (doc.getString("apellido") ?: "").trim()
+                        val nombreRaw = (doc.getString("nombre") ?: "").trim()
+                        val apellidoRaw = (doc.getString("apellido") ?: "").trim()
                         val correo = (doc.getString("correo") ?: "").trim()
+
+                        val nombre = if (nombreRaw.isNotEmpty()) capitalizar(nombreRaw) else ""
+                        val apellido = if (apellidoRaw.isNotEmpty()) capitalizar(apellidoRaw) else ""
 
                         val label = when {
                             nombre.isNotEmpty() || apellido.isNotEmpty() ->
@@ -141,13 +146,14 @@ class crudEditRol : AppCompatActivity() {
             .addOnSuccessListener { doc ->
                 if (doc != null && doc.exists()) {
                     try {
-                        val nombre = listOfNotNull(
+                        val nombreCompuesto = listOfNotNull(
                             doc.getString("nombre"),
                             doc.getString("apellido")
                         )
                             .filter { !it.isNullOrBlank() }
                             .joinToString(" ")
-                            .ifBlank { "-" }
+
+                        val nombre = if (nombreCompuesto.isBlank()) "-" else capitalizar(nombreCompuesto)
 
                         val correo = doc.getString("correo") ?: "-"
                         val rol = doc.getString("rol") ?: "-"
@@ -156,7 +162,6 @@ class crudEditRol : AppCompatActivity() {
                         tvCorreoUsuario.text = "Correo: $correo"
                         tvRolActualUsuario.text = "Rol actual: $rol"
 
-                        // guardamos el rol actual del usuario para reflejarlo en el spinner
                         rolActualUsuario = rol
                         seleccionarRolActualEnSpinner()
 
@@ -215,7 +220,6 @@ class crudEditRol : AppCompatActivity() {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinnerNuevoRol.adapter = adapter
 
-                // cuando ya tenemos la lista de roles, intentamos seleccionar el rol actual
                 seleccionarRolActualEnSpinner()
             }
             .addOnFailureListener {
@@ -239,7 +243,6 @@ class crudEditRol : AppCompatActivity() {
             }
     }
 
-    // ajusta el spinner de roles al rolActualUsuario (si existe en la lista)
     private fun seleccionarRolActualEnSpinner() {
         val rol = rolActualUsuario ?: return
         if (listaRolesNombres.isEmpty()) return
@@ -255,8 +258,6 @@ class crudEditRol : AppCompatActivity() {
         tvCorreoUsuario.text = "Correo: -"
         tvRolActualUsuario.text = "Rol actual: -"
         rolActualUsuario = null
-        // si quieres, también puedes resetear el spinner de rol:
-        // if (listaRolesNombres.isNotEmpty()) spinnerNuevoRol.setSelection(0)
     }
 
     fun aplicarRolUsuarioOnClick(view: View) {
@@ -269,7 +270,6 @@ class crudEditRol : AppCompatActivity() {
 
         val uidUser = listaUserIds[idxUser]
 
-        // ⚠️ BLOQUEO DEL ADMIN PROTEGIDO
         val correoTexto = tvCorreoUsuario.text.toString()
         if (uidUser == adminProtegidoUid || correoTexto.contains(adminProtegidoCorreo)) {
             mostrarAlerta("Acceso denegado", "No se le puede cambiar el rol a este administrador.")

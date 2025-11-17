@@ -52,6 +52,11 @@ class crudProfesorEdit : AppCompatActivity() {
     private val URL_CAMBIAR_CLAVE =
         "$BASE_URL/cambiarPasswordUsuario"
 
+    // solo primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -114,11 +119,19 @@ class crudProfesorEdit : AppCompatActivity() {
                         profesorId = doc.getString("profesorId")
                     )
 
-                    val label = "${curso.nombreCurso} ${curso.nivel ?: ""}"
+                    val nombreCurso = curso.nombreCurso ?: ""
+                    val nivel = curso.nivel ?: ""
+
+                    val label = listOf(
+                        if (nombreCurso.isNotBlank()) capitalizar(nombreCurso) else "",
+                        if (nivel.isNotBlank()) capitalizar(nivel) else ""
+                    )
+                        .filter { it.isNotEmpty() }
+                        .joinToString(" ")
 
                     listaCursos.add(curso)
                     listaIdsCursos.add(curso.idCurso!!)
-                    listaLabelsCursos.add(label.trim())
+                    listaLabelsCursos.add(label.ifBlank { "Curso sin nombre" })
                 }
 
                 actualizarTextoCursos()
@@ -172,8 +185,8 @@ class crudProfesorEdit : AppCompatActivity() {
     fun editarProfesor(view: View) {
         val id = documentoId ?: return
 
-        val nombreNuevo = txtNombreProf.text.toString().trim()
-        val apellidoNuevo = txtApellidoProf.text.toString().trim()
+        val nombreNuevo = capitalizar(txtNombreProf.text.toString())
+        val apellidoNuevo = capitalizar(txtApellidoProf.text.toString())
         val contrasenaNueva = txtContrasenaProf.text?.toString()?.trim().orEmpty()
 
         val datos = mutableMapOf<String, Any>()

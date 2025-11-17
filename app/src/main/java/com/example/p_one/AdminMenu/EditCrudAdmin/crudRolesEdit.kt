@@ -31,6 +31,11 @@ class crudRolesEdit : AppCompatActivity() {
     private var idRol: String? = null
     private var permisosLista: ArrayList<String> = arrayListOf()
 
+    // solo primera letra en mayúscula
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,14 +57,12 @@ class crudRolesEdit : AppCompatActivity() {
         btnEditarRol = findViewById(R.id.btnEditarRol)
         progressRol = findViewById(R.id.progressRol)
 
-        // ---------- RECIBIR DATOS DEL INTENT ----------
         idRol = intent.getStringExtra("idRol")
         val nombreRol = intent.getStringExtra("nombreRol") ?: ""
         val descripcionRol = intent.getStringExtra("descripcionRol") ?: ""
         val creadorId = intent.getStringExtra("creadoPor") ?: ""
         val creadorNombreExtra = intent.getStringExtra("creadorNombre")
 
-        // Texto que se mostrará en el LABEL
         val textoCreador = when {
             !creadorNombreExtra.isNullOrEmpty() -> creadorNombreExtra
             creadorId.isNotEmpty() -> creadorId
@@ -68,12 +71,10 @@ class crudRolesEdit : AppCompatActivity() {
 
         permisosLista = intent.getStringArrayListExtra("permisos") ?: arrayListOf("Sin permisos")
 
-        // ---------- CARGAR EN LOS CAMPOS ----------
         txtNombreRol.setText(nombreRol)
         txtDescripcionRol.setText(descripcionRol)
-        tvCreadorNombre.text = textoCreador   // AQUÍ VA EL LABEL
+        tvCreadorNombre.text = textoCreador
 
-        // ---------- SPINNER DE PERMISOS ----------
         val spinnerAdapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
@@ -86,7 +87,6 @@ class crudRolesEdit : AppCompatActivity() {
             spinnerPermisoMenu.setSelection(0)
         }
 
-        // ---------- BOTONES ----------
         btnCancelarRol.setOnClickListener {
             finish()
         }
@@ -103,8 +103,8 @@ class crudRolesEdit : AppCompatActivity() {
             return
         }
 
-        val nombre = txtNombreRol.text?.toString()?.trim().orEmpty()
-        val descripcion = txtDescripcionRol.text?.toString()?.trim().orEmpty()
+        val nombre = capitalizar(txtNombreRol.text?.toString().orEmpty())
+        val descripcion = capitalizar(txtDescripcionRol.text?.toString().orEmpty())
 
         if (nombre.isEmpty()) {
             mostrarAlerta("Aviso", "El nombre del rol no puede estar vacío.")

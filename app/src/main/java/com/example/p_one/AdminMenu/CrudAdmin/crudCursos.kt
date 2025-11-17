@@ -29,7 +29,12 @@ class crudCursos : AppCompatActivity() {
     private val listaProfesIds = mutableListOf<String>()
     private lateinit var adaptadorProfes: ArrayAdapter<String>
 
-    private var documentoId: String? = null   // modo edición
+    private var documentoId: String? = null
+
+    // 👉 Función agregada (solo primera letra en mayúscula)
+    private fun capitalizar(texto: String): String {
+        return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,8 +74,13 @@ class crudCursos : AppCompatActivity() {
                 listaProfesIds.clear()
 
                 for (doc in snap) {
-                    val nombre = doc.getString("nombre") ?: ""
-                    val apellido = doc.getString("apellido") ?: ""
+                    val nombreRaw = doc.getString("nombre") ?: ""
+                    val apellidoRaw = doc.getString("apellido") ?: ""
+
+                    // 👉 capitalizar nombres
+                    val nombre = capitalizar(nombreRaw)
+                    val apellido = capitalizar(apellidoRaw)
+
                     val id = doc.id
 
                     listaProfes.add("$nombre $apellido")
@@ -83,15 +93,14 @@ class crudCursos : AppCompatActivity() {
     }
 
     fun crearCurso(view: View) {
-        val nombre = txtNombreCurso.text?.toString()?.trim().orEmpty()
-        val nivel = txtNivelCurso.text?.toString()?.trim().orEmpty()
+        val nombre = capitalizar(txtNombreCurso.text?.toString().orEmpty())
+        val nivel = capitalizar(txtNivelCurso.text?.toString().orEmpty())
 
         if (nombre.isEmpty() || nivel.isEmpty()) {
             mostrarAlerta("Error", "Completa nombre y nivel del curso.")
             return
         }
 
-        // profesorId OPCIONAL
         val profesorId: String? = if (listaProfesIds.isNotEmpty()
             && spProfes.selectedItemPosition in listaProfesIds.indices
         ) {
