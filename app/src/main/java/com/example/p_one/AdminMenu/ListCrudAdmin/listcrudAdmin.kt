@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,17 +29,12 @@ class listcrudAdmin : AppCompatActivity() {
     private val listaAdmins = mutableListOf<Users>()
     private lateinit var adapterAdmins: ArrayAdapter<String>
 
-    // ⚠️ ADMIN QUE NO SE PUEDE ELIMINAR
     private val adminProtegidoUid = "9o51Mc4SWvZIV02pZOpSACFxJSZ2"
     private val adminProtegidoCorreo = "sebastian.leon1@virginiogomez.cl"
 
-    // ---------------- BACKEND NODE ----------------
     private val client = OkHttpClient()
     private val BASE_URL = "https://pone-backend-kz8c.onrender.com"
-
-    private val URL_ELIMINAR_USUARIO =
-        "$BASE_URL/eliminarUsuarioCompleto"
-    // ------------------------------------------------
+    private val URL_ELIMINAR_USUARIO = "$BASE_URL/eliminarUsuarioCompleto"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,12 +50,29 @@ class listcrudAdmin : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         lvAdmins = findViewById(R.id.lvAdmins)
 
-        adapterAdmins = ArrayAdapter(
+        // ------------------- ADAPTADOR PERSONALIZADO -------------------
+        adapterAdmins = object : ArrayAdapter<String>(
             this,
-            android.R.layout.simple_list_item_1,
+            R.layout.item_admin,
+            R.id.tvFilaNombre,
             mutableListOf<String>()
-        )
+        ) {
+            override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getView(position, convertView, parent)
+
+                val nombre = view.findViewById<TextView>(R.id.tvFilaNombre)
+                val correo = view.findViewById<TextView>(R.id.tvFilaCorreo)
+
+                val admin = listaAdmins[position]
+
+                nombre.text = "${admin.nombre} ${admin.apellido}"
+                correo.text = admin.correo
+
+                return view
+            }
+        }
         lvAdmins.adapter = adapterAdmins
+        // ----------------------------------------------------------------
 
         cargarAdministradores()
         configurarEventosLista()
@@ -126,7 +139,6 @@ class listcrudAdmin : AppCompatActivity() {
         startActivity(intent)
     }
 
-    // ⚠️ CHEQUEA SI ES EL ADMIN BLOQUEADO
     private fun esAdminProtegido(admin: Users): Boolean {
         val uid = admin.uidAuth ?: ""
         val correo = admin.correo ?: ""
@@ -135,8 +147,6 @@ class listcrudAdmin : AppCompatActivity() {
     }
 
     private fun confirmarEliminarAdmin(admin: Users, position: Int) {
-
-        // 🚫 Bloquear eliminación del admin especial
         if (esAdminProtegido(admin)) {
             mostrarAlerta("Aviso", "No puedes eliminar este administrador.")
             return
@@ -172,7 +182,6 @@ class listcrudAdmin : AppCompatActivity() {
         }
     }
 
-    // -------------- FUNCIÓN PARA LLAMAR AL BACKEND --------------
     private fun eliminarUsuarioCompletoBackend(
         idDocumento: String,
         callback: (Boolean, String) -> Unit
@@ -199,7 +208,6 @@ class listcrudAdmin : AppCompatActivity() {
             }
         }.start()
     }
-    // ------------------------------------------------------------
 
     private fun mostrarAlerta(titulo: String, mensaje: String) {
         val b = AlertDialog.Builder(this)

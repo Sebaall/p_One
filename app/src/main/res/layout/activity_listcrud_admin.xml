@@ -23,6 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- TÍTULO -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvTituloListaAdmins"
             android:layout_width="match_parent"
@@ -32,8 +33,9 @@
             android:textStyle="bold"
             android:textColor="#000000"
             android:gravity="center"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="4dp" />
 
+        <!-- SUBTÍTULO -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvSubtituloListaAdmins"
             android:layout_width="match_parent"
@@ -42,22 +44,68 @@
             android:textSize="14sp"
             android:textColor="#555555"
             android:gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
+        <!-- DIVISOR -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#FFE0B2"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="10dp" />
 
+        <!-- CABECERA SOLO NOMBRE / CORREO -->
+        <LinearLayout
+            android:id="@+id/header_row_admin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:background="#1AFFA726">
+
+            <TextView
+                android:id="@+id/tvHeaderNombreAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nombre"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#444444"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/tvHeaderCorreoAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:text="Correo"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#444444"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <!-- DIVISOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFE0B2"
+            android:layout_marginBottom="6dp" />
+
+        <!-- LISTA -->
         <ListView
             android:id="@+id/lvAdmins"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:divider="#BDBDBD"
-            android:dividerHeight="1dp" />
+            android:divider="#FFE0B2"
+            android:dividerHeight="1dp"
+            android:padding="6dp"
+            android:background="#FFFDF7" />
 
+        <!-- BOTÓN VOLVER -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVolverDesdeListaAdmins"
             android:layout_width="match_parent"
