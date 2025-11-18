@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.AdminMenu.CrudAdmin.crudAlumno
+import com.example.p_one.AdminMenu.CrudAdmin.crudEditRol
 import com.example.p_one.AdminMenu.EditCrudAdmin.crudAlumnoEditar
 import com.example.p_one.Models.Curso
 import com.example.p_one.Models.Users
@@ -131,6 +133,9 @@ class listcrudAlumno : AppCompatActivity() {
 
                 true
             }
+    }
+    fun curdvolver(view: View){
+        startActivity(Intent(this, crudAlumno::class.java))
     }
 
     private fun irAEditarAlumno(alumno: Users) {

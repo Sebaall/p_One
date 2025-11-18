@@ -1,5 +1,6 @@
 package com.example.p_one.AdminMenu.CrudAdmin
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.Main.menuAdmin
 import com.example.p_one.R
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -81,7 +83,9 @@ class crudEditRol : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
-
+    fun menubacks(view: View){
+        startActivity(Intent(this, menuAdmin::class.java))
+    }
     private fun cargarUsuariosEnSpinner() {
         progressEditRol.visibility = View.VISIBLE
 
@@ -319,7 +323,15 @@ class crudEditRol : AppCompatActivity() {
                 progressEditRol.visibility = View.GONE
                 tvRolActualUsuario.text = "Rol actual: $rolTexto"
                 rolActualUsuario = rolTexto
+
                 mostrarAlerta("Listo", "Rol actualizado correctamente.")
+
+                android.os.Handler(mainLooper).postDelayed({
+                    val intent = Intent(this, menuAdmin::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                }, 3000)
             }
             .addOnFailureListener {
                 progressEditRol.visibility = View.GONE

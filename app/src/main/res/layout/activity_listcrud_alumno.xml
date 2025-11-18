@@ -143,12 +143,13 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
+            android:onClick="curdvolver"
             android:text="Volver"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:backgroundTint="#FFA726"
-            app:rippleColor="#CC7A00"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="12dp"
+            app:rippleColor="#CC7A00" />
 
     </LinearLayout>
 

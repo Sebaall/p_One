@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.p_one.AdminMenu.ListCrudAdmin.listcrudAlumno
+import com.example.p_one.Main.menuAdmin
 import com.example.p_one.Models.Curso
 import com.example.p_one.Models.Users
 import com.example.p_one.R
@@ -125,7 +126,6 @@ class crudAlumno : AppCompatActivity() {
                         txt_apodo.text.clear()
                     } else {
 
-                        // YA NO SE USA CONTADOR, SE CREA DIRECTO
                         auth.createUserWithEmailAndPassword(correo, contrasena)
                             .addOnSuccessListener { result ->
                                 val uid = result.user?.uid ?: ""
@@ -198,7 +198,9 @@ class crudAlumno : AppCompatActivity() {
             mostrarAlerta("Aviso", "Estás en modo edición. Usa Editar.")
         }
     }
-
+    fun curdback(view: View){
+        startActivity(Intent(this, menuAdmin::class.java))
+    }
     private fun mostrarAlerta(titulo: String, mensaje: String) {
         val b = AlertDialog.Builder(this)
         b.setTitle(titulo)

@@ -28,11 +28,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Editar rol de usuario"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#000000"
             android:gravity="center"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="4dp" />
 
         <!-- SUBTÍTULO -->
         <com.google.android.material.textview.MaterialTextView
@@ -40,26 +40,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Selecciona un usuario y asigna el menú que le corresponde en P-One."
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="#555555"
             android:gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
         <!-- DIVISOR -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#FFE0B2"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="14dp" />
 
-        <!-- SELECCIONAR USUARIO -->
+        <!-- SELECCIONAR USUARIO (LABEL TIPO PERMISO) -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvSeleccionUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Selecciona usuario:"
+            android:text="USUARIO"
+            android:textAllCaps="true"
             android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textColor="#7A7A7A"
+            android:textSize="12sp" />
 
         <Spinner
             android:id="@+id/spinnerUsuario"
@@ -68,56 +70,82 @@
             android:spinnerMode="dropdown"
             android:layout_marginTop="6dp" />
 
-        <!-- DATOS DEL USUARIO -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tvAyudaUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Elige al usuario por su nombre o correo."
+            android:textSize="11sp"
+            android:textColor="#777777"
+            android:layout_marginTop="2dp" />
+
+        <!-- DATOS DEL USUARIO EN TARJETA -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvDatosUsuarioTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Datos del usuario seleccionado"
+            android:text="DATOS DEL USUARIO"
+            android:textAllCaps="true"
             android:textStyle="bold"
-            android:textColor="#000000"
+            android:textColor="#7A7A7A"
+            android:textSize="12sp"
             android:layout_marginTop="16dp" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvNombreUsuario"
+        <LinearLayout
+            android:id="@+id/containerDatosUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre: -"
-            android:layout_marginTop="4dp"
-            android:textColor="#000000" />
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="#FFF3E0"
+            android:layout_marginTop="6dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvCorreoUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Correo: -"
-            android:layout_marginTop="2dp"
-            android:textColor="#000000" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvNombreUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre: -"
+                android:textColor="#000000"
+                android:textSize="14sp" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvRolActualUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Rol actual: -"
-            android:layout_marginTop="2dp"
-            android:textColor="#000000" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvCorreoUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Correo: -"
+                android:layout_marginTop="2dp"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvRolActualUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rol actual: -"
+                android:layout_marginTop="4dp"
+                android:textColor="#FFA726"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <!-- NUEVO ROL -->
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvNuevoRolTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nuevo rol (menú):"
+            android:text="NUEVO ROL (MENÚ)"
+            android:textAllCaps="true"
             android:textStyle="bold"
-            android:textColor="#000000"
-            android:layout_marginTop="16dp" />
+            android:textColor="#7A7A7A"
+            android:textSize="12sp"
+            android:layout_marginTop="18dp" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvNuevoRolAyuda"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Selecciona el menú principal que verá este usuario al iniciar sesión."
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:textColor="#777777"
             android:layout_marginTop="2dp" />
 
@@ -138,22 +166,24 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnVolverEditRol"
-                android:layout_width="130dp"
-                android:layout_height="53dp"
-                android:layout_marginEnd="10dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:onClick="menubacks"
                 android:text="Volver"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"
-                app:backgroundTint="#FFA726"
-                app:rippleColor="#CC7A00"
+                app:backgroundTint="#B0BEC5"
                 app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAplicarRol"
-                android:layout_width="130dp"
-                android:layout_height="53dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
                 android:text="Aplicar rol"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
@@ -163,20 +193,6 @@
                 app:rippleColor="#CC7A00"
                 app:cornerRadius="12dp" />
         </LinearLayout>
-
-        <!-- VER LISTA ABAJO -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVerListaPersonasRoles"
-            android:layout_width="match_parent"
-            android:layout_height="53dp"
-            android:layout_marginTop="14dp"
-            android:text="Ver lista roles"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium"
-            app:backgroundTint="#29B6F6"
-            app:rippleColor="#0277BD"
-            app:cornerRadius="12dp" />
 
         <ProgressBar
             android:id="@+id/progressEditRol"
