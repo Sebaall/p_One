@@ -1,15 +1,21 @@
 package com.example.p_one.AdminMenu.ListCrudAdmin
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.p_one.AdminMenu.CrudAdmin.crudAlumno
+import com.example.p_one.AdminMenu.CrudAdmin.crudCursos
 import com.example.p_one.AdminMenu.EditCrudAdmin.crudCursoEditar
 import com.example.p_one.Models.Curso
 import com.example.p_one.R
@@ -21,7 +27,7 @@ class listcrudCurso : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
 
     private val listaCursos = mutableListOf<Curso>()
-    private lateinit var adapterCursos: ArrayAdapter<String>
+    private lateinit var adapterCursos: CursosAdapter
 
     private val mapaProfes = mutableMapOf<String, String>()
 
@@ -39,12 +45,7 @@ class listcrudCurso : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         lvCursos = findViewById(R.id.lvCursos)
 
-        adapterCursos = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            mutableListOf()
-        )
-
+        adapterCursos = CursosAdapter(this)
         lvCursos.adapter = adapterCursos
 
         cargarMapaProfes {
@@ -52,7 +53,9 @@ class listcrudCurso : AppCompatActivity() {
             configurarEventosLista()
         }
     }
-
+    fun ba(view: View){
+        startActivity(Intent(this, crudCursos::class.java))
+    }
     private fun cargarMapaProfes(onReady: () -> Unit) {
         db.collection("users")
             .whereEqualTo("rol", "Profesor")
@@ -78,7 +81,6 @@ class listcrudCurso : AppCompatActivity() {
 
     private fun cargarCursos() {
         listaCursos.clear()
-        adapterCursos.clear()
 
         db.collection("Cursos")
             .get()
@@ -94,27 +96,6 @@ class listcrudCurso : AppCompatActivity() {
                         }
 
                         listaCursos.add(curso)
-
-                        val texto = buildString {
-                            val nombreCurso = curso.nombreCurso ?: ""
-                            val nivel = curso.nivel ?: ""
-
-                            if (nombreCurso.isNotEmpty() && nivel.isNotEmpty()) {
-                                append(nombreCurso)
-                                append("°")
-                                append(nivel)
-                            } else {
-                                append(nombreCurso.ifEmpty { "Curso sin nombre" })
-                            }
-
-                            val profId = curso.profesorId
-                            if (!profId.isNullOrEmpty()) {
-                                append("\nProfesor: ")
-                                append(mapaProfes[profId] ?: profId)
-                            }
-                        }
-
-                        adapterCursos.add(texto)
                     }
                 }
 
@@ -176,9 +157,6 @@ class listcrudCurso : AppCompatActivity() {
             .addOnSuccessListener {
                 mostrarAlerta("Éxito", "Curso eliminado.")
 
-                val textoItem = adapterCursos.getItem(position)
-                if (textoItem != null) adapterCursos.remove(textoItem)
-
                 listaCursos.removeAt(position)
                 adapterCursos.notifyDataSetChanged()
             }
@@ -194,5 +172,40 @@ class listcrudCurso : AppCompatActivity() {
             .setPositiveButton("Aceptar", null)
             .create()
             .show()
+    }
+
+    private inner class CursosAdapter(context: Context) :
+        ArrayAdapter<Curso>(context, 0, listaCursos) {
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val rowView = convertView
+                ?: layoutInflater.inflate(R.layout.item_curso, parent, false)
+
+            val tvCurso = rowView.findViewById<TextView>(R.id.tvFilaCurso)
+            val tvProfesor = rowView.findViewById<TextView>(R.id.tvFilaProfesor)
+
+            val curso = listaCursos[position]
+
+            val nombreCurso = curso.nombreCurso ?: ""
+            val nivel = curso.nivel ?: ""
+
+            val textoCurso = when {
+                nombreCurso.isNotEmpty() && nivel.isNotEmpty() -> "${nombreCurso}°$nivel"
+                nombreCurso.isNotEmpty() -> nombreCurso
+                else -> "Curso sin nombre"
+            }
+
+            val profesorId = curso.profesorId
+            val textoProfesor = if (!profesorId.isNullOrEmpty()) {
+                mapaProfes[profesorId] ?: "Profesor no encontrado"
+            } else {
+                "Sin profesor"
+            }
+
+            tvCurso.text = textoCurso
+            tvProfesor.text = textoProfesor
+
+            return rowView
+        }
     }
 }

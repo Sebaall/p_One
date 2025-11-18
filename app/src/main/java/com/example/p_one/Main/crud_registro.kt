@@ -71,7 +71,7 @@ class crud_registro : AppCompatActivity() {
 
         when {
             email.isEmpty() -> { alerta("Ingresa tu correo"); return }
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> { alerta("Correo no válido"); return }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> { alerta("Correo no válido"); return }
             nombre.isEmpty() -> { alerta("Ingresa tu nombre"); return }
             apellido.isEmpty() -> { alerta("Ingresa tu apellido"); return }
             pass.isEmpty() -> { alerta("Ingresa tu contraseña"); return }
@@ -86,89 +86,78 @@ class crud_registro : AppCompatActivity() {
         }
     }
 
-
     private fun crearCuenta(email: String, nombre: String, apellido: String, pass: String) {
-        db.collection("users").whereEqualTo("nombre", nombre).limit(1).get()
-            .addOnSuccessListener { snapUser ->
-                if (snapUser.isEmpty) {
-                    db.collection("users").whereEqualTo("correo", email).limit(1).get()
-                        .addOnSuccessListener { snapMail ->
-                            if (snapMail.isEmpty) {
-                                auth.createUserWithEmailAndPassword(email, pass)
-                                    .addOnSuccessListener { res ->
-                                        val u = res.user
-                                        if (u != null) {
 
-                                            val perfil = Users(
-                                                uidAuth = u.uid,
-                                                rol = "Alumno",
-                                                activo = false,
-                                                nombre = nombre,
-                                                apellido = apellido,
-                                                correo = email,
-                                                roles = null,
-                                                nivelAcceso = 1,
-                                                emailVerificado = false,
-                                                createdAt = System.currentTimeMillis()
-                                            )
+        db.collection("users").whereEqualTo("correo", email).limit(1).get()
+            .addOnSuccessListener { snapMail ->
+                if (snapMail.isEmpty) {
 
-                                            db.collection("users").document(u.uid).set(perfil)
-                                                .addOnSuccessListener {
-                                                    asignarRolPorDefecto(u)
-                                                    enviarCorreoVerificacion(u) { ok, info ->
-                                                        if (ok) {
-                                                            db.collection("users").document(u.uid)
-                                                                .update(mapOf("welcomeSent" to true))
-                                                        }
-                                                        auth.signOut()
-                                                        bloquear(false)
-                                                        if (ok) {
-                                                            alerta("Cuenta creada. Revisa tu correo y verifica para poder ingresar.")
+                    auth.createUserWithEmailAndPassword(email, pass)
+                        .addOnSuccessListener { res ->
+                            val u = res.user
+                            if (u != null) {
 
-                                                            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                                                                finish()
-                                                            }, 3000)
+                                val perfil = Users(
+                                    uidAuth = u.uid,
+                                    rol = "Alumno",
+                                    activo = false,
+                                    nombre = nombre,
+                                    apellido = apellido,
+                                    correo = email,
+                                    roles = null,
+                                    nivelAcceso = 1,
+                                    emailVerificado = false,
+                                    createdAt = System.currentTimeMillis()
+                                )
 
-                                                        } else {
-                                                            alerta("Cuenta creada, pero no pude enviar el correo: ${info ?: "intenta más tarde"}")
-                                                        }
-
-                                                    }
-                                                }
-                                                .addOnFailureListener { e ->
-                                                    bloquear(false)
-                                                    alerta(e.message ?: "Error guardando el perfil.")
-                                                }
-                                        } else {
+                                db.collection("users").document(u.uid).set(perfil)
+                                    .addOnSuccessListener {
+                                        asignarRolPorDefecto(u)
+                                        enviarCorreoVerificacion(u) { ok, info ->
+                                            if (ok) {
+                                                db.collection("users").document(u.uid)
+                                                    .update(mapOf("welcomeSent" to true))
+                                            }
+                                            auth.signOut()
                                             bloquear(false)
-                                            alerta("No se obtuvo el usuario.")
+                                            if (ok) {
+                                                alerta("Cuenta creada. Revisa tu correo y verifica para poder ingresar.")
+
+                                                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                                                    finish()
+                                                }, 3000)
+
+                                            } else {
+                                                alerta("Cuenta creada, pero no pude enviar el correo: ${info ?: "intenta más tarde"}")
+                                            }
                                         }
                                     }
                                     .addOnFailureListener { e ->
                                         bloquear(false)
-                                        if (e is FirebaseAuthUserCollisionException) {
-                                            alerta("Ese correo ya está registrado.")
-                                        } else {
-                                            alerta(e.message ?: "No se pudo crear la cuenta.")
-                                        }
+                                        alerta(e.message ?: "Error guardando el perfil.")
                                     }
                             } else {
                                 bloquear(false)
-                                alerta("Ese correo ya está en uso.")
+                                alerta("No se obtuvo el usuario.")
                             }
                         }
                         .addOnFailureListener { e ->
                             bloquear(false)
-                            alerta(e.message ?: "Error al validar correo.")
+                            if (e is FirebaseAuthUserCollisionException) {
+                                alerta("Ese correo ya está registrado.")
+                            } else {
+                                alerta(e.message ?: "No se pudo crear la cuenta.")
+                            }
                         }
+
                 } else {
                     bloquear(false)
-                    alerta("Ese nombre ya está en uso.")
+                    alerta("Ese correo ya está en uso.")
                 }
             }
             .addOnFailureListener { e ->
                 bloquear(false)
-                alerta(e.message ?: "Error al validar nombre.")
+                alerta(e.message ?: "Error al validar correo.")
             }
     }
 

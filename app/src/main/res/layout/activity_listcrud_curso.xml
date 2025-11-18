@@ -51,16 +51,59 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#FFE0B2"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="8dp" />
 
-        <!-- LISTVIEW CURSOS -->
+        <!-- CABECERA TABLA: CURSO / PROFESOR -->
+        <LinearLayout
+            android:id="@+id/headerCursos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:gravity="center_vertical"
+            android:background="#FFF3E0">
+
+            <!-- CURSO -->
+            <TextView
+                android:id="@+id/tvHeaderCurso"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:text="Curso"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center_vertical" />
+
+            <!-- PROFESOR -->
+            <TextView
+                android:id="@+id/tvHeaderProfesor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.3"
+                android:text="Profesor"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+
+        <!-- SEPARADOR ENTRE CABECERA Y LISTA -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFE0B2"
+            android:layout_marginBottom="4dp" />
+
+        <!-- LISTVIEW CURSOS (usa el item con tvFilaCurso y tvFilaProfesor) -->
         <ListView
             android:id="@+id/lvCursos"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:divider="#BDBDBD"
-            android:dividerHeight="1dp" />
+            android:divider="#00FFFFFF"
+            android:dividerHeight="0dp" />
 
         <!-- BOTÓN VOLVER -->
         <com.google.android.material.button.MaterialButton
@@ -68,12 +111,13 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
+            android:onClick="ba"
             android:text="Volver"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:backgroundTint="#FFA726"
-            app:rippleColor="#CC7A00"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="12dp"
+            app:rippleColor="#CC7A00" />
 
     </LinearLayout>
 

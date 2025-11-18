@@ -134,7 +134,8 @@ class listcrudAlumno : AppCompatActivity() {
                 true
             }
     }
-    fun curdvolver(view: View){
+
+    fun curdvolver(view: View) {
         startActivity(Intent(this, crudAlumno::class.java))
     }
 
@@ -178,11 +179,11 @@ class listcrudAlumno : AppCompatActivity() {
     }
 
     private fun eliminarUsuarioCompletoBackend(
-        idDocumento: String,
+        idUsuario: String,
         callback: (Boolean, String) -> Unit
     ) {
         val json = JSONObject()
-        json.put("idUsuario", idDocumento)
+        json.put("idUsuario", idUsuario)
 
         val body = json.toString()
             .toRequestBody("application/json; charset=utf-8".toMediaType())

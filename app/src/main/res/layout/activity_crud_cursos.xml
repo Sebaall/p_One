@@ -128,8 +128,9 @@
         <Spinner
             android:id="@+id/spinner_profe"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="48dp"
+            android:layout_marginBottom="12dp"
+            android:spinnerMode="dropdown" />
 
         <!-- BOTONES ORDENADOS -->
         <LinearLayout
@@ -144,13 +145,14 @@
                 android:layout_width="130dp"
                 android:layout_height="53dp"
                 android:layout_marginEnd="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:onClick="vol"
                 android:text="Volver"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-medium"
                 app:backgroundTint="#FFA726"
-                app:rippleColor="#CC7A00"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="12dp"
+                app:rippleColor="#CC7A00" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCrearCurso"
@@ -167,19 +169,22 @@
                 app:cornerRadius="12dp" />
         </LinearLayout>
 
-        <!-- VER CURSOS ABAJO -->
+        <!-- VER CURSOS ABAJO (mismo estilo que 'Ver lista' de roles) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVerListaCursos"
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="53dp"
             android:layout_marginTop="14dp"
+            android:layout_gravity="center"
             android:fontFamily="sans-serif-medium"
             android:onClick="listcurso"
             android:text="Ver cursos"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            app:backgroundTint="#29B6F6"
+            app:backgroundTint="#546E7A"
             app:cornerRadius="12dp"
+            app:strokeColor="#FFFFFF"
+            app:strokeWidth="2dp"
             app:rippleColor="#0277BD" />
 
     </LinearLayout>

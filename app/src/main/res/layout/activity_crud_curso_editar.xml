@@ -56,8 +56,8 @@
         <!-- Nombre del curso -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             app:boxBackgroundColor="#FFFFFF"
             app:boxBackgroundMode="outline"
             app:boxCornerRadiusBottomEnd="12dp"
@@ -72,7 +72,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_nombre_curso"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="Curso (ej: 1, 2, 3)"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -80,8 +80,8 @@
         <!-- Nivel / Letra -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             app:boxBackgroundColor="#FFFFFF"
             app:boxBackgroundMode="outline"
             app:boxCornerRadiusBottomEnd="12dp"
@@ -96,7 +96,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_nivel_curso"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="Letra (ej: A, B, C)"
                 android:inputType="textCapCharacters" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -128,10 +128,11 @@
         <Spinner
             android:id="@+id/spinner_profe"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="48dp"
+            android:layout_marginBottom="12dp"
+            android:spinnerMode="dropdown" />
 
-        <!-- Botones (Cancelar / Editar curso) -->
+        <!-- Botones (Cancelar / Guardar cambios) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -159,7 +160,7 @@
                 android:layout_height="53dp"
                 android:layout_marginStart="10dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Guardar Cambios"
+                android:text="Guardar cambios"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 app:backgroundTint="#FFA726"

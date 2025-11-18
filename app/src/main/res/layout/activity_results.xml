@@ -36,34 +36,37 @@
                 android:elevation="4dp"
                 android:clipToPadding="false">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvTituloResultados"
+                <!-- ENCABEZADO COLORIDO -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Resumen de tu partida"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp" />
+                    android:padding="12dp"
+                    android:orientation="vertical"
+                    android:background="#FFF3E0"
+                    android:layout_marginBottom="16dp">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvSubtituloResultados"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Revisa tu desempeño en el juego de matemáticas."
-                    android:textSize="14sp"
-                    android:textColor="#555555"
-                    android:gravity="center"
-                    android:layout_marginBottom="16dp" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvTituloResultados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="✨ Resumen de tu partida"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:gravity="center" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#FFE0B2"
-                    android:layout_marginBottom="16dp" />
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvSubtituloResultados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Revisa cómo te fue en el juego de matemáticas."
+                        android:textSize="14sp"
+                        android:textColor="#555555"
+                        android:gravity="center"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
 
-                <!-- Apodo / Alumno -->
+                <!-- APODO / ALUMNO -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvApodoResultado"
                     android:layout_width="match_parent"
@@ -71,35 +74,46 @@
                     android:text="Alumno: -"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#000000" />
-
-                <!-- Resumen corto tipo: "Aciertos: 7/10 (70%)" -->
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvResumenResultado"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Resultados del juego"
-                    android:textSize="16sp"
                     android:textColor="#000000"
-                    android:layout_marginTop="12dp" />
+                    android:layout_marginBottom="4dp" />
 
-                <!-- Detalle con texto largo -->
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tvDetalleResultado"
+                <!-- RESUMEN RESALTADO -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="14sp"
-                    android:textColor="#444444"
-                    android:layout_marginTop="8dp" />
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#FFF8E1">
 
-                <!-- Línea separadora antes del botón -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvResumenResultado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Resultados del juego"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvDetalleResultado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="14sp"
+                        android:textColor="#444444"
+                        android:layout_marginTop="6dp"
+                        android:lineSpacingExtra="2dp" />
+                </LinearLayout>
+
+                <!-- SEPARADOR -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="20dp"
                     android:background="#FFE0B2" />
 
+                <!-- BOTÓN VER RANKING -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerRanking"
                     android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.p_one.AdminMenu.ListCrudAdmin.listcrudCurso
+import com.example.p_one.Main.menuAdmin
 import com.example.p_one.Models.Curso
 import com.example.p_one.R
 import com.google.android.material.textfield.TextInputEditText
@@ -28,8 +29,6 @@ class crudCursos : AppCompatActivity() {
     private val listaProfes = mutableListOf<String>()
     private val listaProfesIds = mutableListOf<String>()
     private lateinit var adaptadorProfes: ArrayAdapter<String>
-
-    private var documentoId: String? = null
 
     private fun capitalizar(texto: String): String {
         return texto.trim().lowercase().replaceFirstChar { it.uppercase() }
@@ -72,6 +71,8 @@ class crudCursos : AppCompatActivity() {
                 listaProfes.clear()
                 listaProfesIds.clear()
 
+                listaProfes.add("Selecciona un Profesor")
+
                 for (doc in snap) {
                     val nombreRaw = doc.getString("nombre") ?: ""
                     val apellidoRaw = doc.getString("apellido") ?: ""
@@ -89,7 +90,9 @@ class crudCursos : AppCompatActivity() {
                 if (listaProfes.isNotEmpty()) spProfes.setSelection(0)
             }
     }
-
+    fun vol(view: View){
+        startActivity(Intent(this, menuAdmin::class.java))
+    }
     fun crearCurso(view: View) {
         val nombre = capitalizar(txtNombreCurso.text?.toString().orEmpty())
         val nivel = capitalizar(txtNivelCurso.text?.toString().orEmpty())
@@ -99,10 +102,16 @@ class crudCursos : AppCompatActivity() {
             return
         }
 
-        val profesorId: String? = if (listaProfesIds.isNotEmpty()
-            && spProfes.selectedItemPosition in listaProfesIds.indices
-        ) {
-            listaProfesIds[spProfes.selectedItemPosition]
+        val hayProfes = listaProfesIds.isNotEmpty()
+
+        if (hayProfes && spProfes.selectedItemPosition == 0) {
+            mostrarAlerta("Error", "Selecciona un profesor.")
+            return
+        }
+
+        val profesorId: String? = if (hayProfes && spProfes.selectedItemPosition > 0) {
+            val indexId = spProfes.selectedItemPosition - 1
+            if (indexId in listaProfesIds.indices) listaProfesIds[indexId] else null
         } else {
             null
         }
