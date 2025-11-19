@@ -1,4 +1,4 @@
-# P-One
+# Númerix
 
 P-One es una aplicación educativa para estudiantes de educación básica. Su objetivo principal es reforzar las matemáticas mediante ejercicios simples, retroalimentación inmediata y un sistema de progreso accesible tanto para alumnos como para profesores y administradores.
 
